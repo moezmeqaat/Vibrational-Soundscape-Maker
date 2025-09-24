@@ -9,6 +9,12 @@ Vibrational Soundscape is a lightweight, browser-based web application that crea
 
 This project is built with pure HTML, CSS, and JavaScript, making it highly portable and easy to run. No server-side dependencies are required—just open the index.html file in your browser to get started.
 
+
+![Vibrational-Soundscape-Maker-app](https://github.com/user-attachments/assets/b4499dff-7630-4010-9532-c8a487cda969)
+
+
+
+
 Features
 Multi-Stage Progression: The application features a five-stage audio journey:
 
