@@ -247,11 +247,17 @@
             <div id="windChk" class="w-4 h-4 rounded-full transition-all duration-200"></div>
           </div>
         </div>
-        <!-- NEW SHAMANIC DRUM TOGGLE -->
         <div id="drumOption" class="flex justify-between items-center cursor-pointer p-2 rounded-xl hover:bg-white/10 transition-colors">
           <span class="text-sm">Shamanic drum</span>
           <div class="w-6 h-6 rounded-full border-2 border-[var(--checkmark-color)] flex items-center justify-center transition-all duration-200" id="drumChkContainer">
             <div id="drumChk" class="w-4 h-4 rounded-full transition-all duration-200"></div>
+          </div>
+        </div>
+        <!-- New Toggle for Deep Sleep Waves -->
+        <div id="deepSleepOption" class="flex justify-between items-center cursor-pointer p-2 rounded-xl hover:bg-white/10 transition-colors">
+          <span class="text-sm">3D Sleep Waves</span>
+          <div class="w-6 h-6 rounded-full border-2 border-[var(--checkmark-color)] flex items-center justify-center transition-all duration-200" id="deepSleepChkContainer">
+            <div id="deepSleepChk" class="w-4 h-4 rounded-full transition-all duration-200"></div>
           </div>
         </div>
       </div>
@@ -359,6 +365,7 @@
         noise: true,
         wind: true,
         drum: true,
+        deepSleep: false,
       },
       intensity: 0.6
     },
@@ -372,6 +379,7 @@
         noise: true,
         wind: false,
         drum: false,
+        deepSleep: false,
       },
       intensity: 0.8
     },
@@ -386,6 +394,7 @@
         noise: true,
         wind: false,
         drum: true,
+        deepSleep: false,
       },
       intensity: 0.5
     },
@@ -399,6 +408,7 @@
         noise: true,
         wind: true,
         drum: false,
+        deepSleep: false,
       },
       intensity: 0.4
     },
@@ -406,12 +416,15 @@
       stages: [
         {name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05},
         {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08},
+        // New stage for 3D sleep waves
+        {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}
       ],
       toggles: {
         iso: true,
         noise: true,
         wind: false,
         drum: false,
+        deepSleep: true,
       },
       intensity: 0.3
     },
@@ -424,6 +437,7 @@
         noise: true,
         wind: true,
         drum: true,
+        deepSleep: false,
       },
       intensity: 0.6
     },
@@ -436,6 +450,7 @@
         noise: true,
         wind: true,
         drum: false,
+        deepSleep: false,
       },
       intensity: 0.7
     }
@@ -451,6 +466,7 @@
   let isNoiseEnabled = true;
   let isWindEnabled = true;
   let isDrumEnabled = true;
+  let isDeepSleepEnabled = false;
 
   // UI elements
   const playPauseBtn = document.getElementById('playPauseBtn');
@@ -464,10 +480,12 @@
   const noiseOption = document.getElementById('noiseOption');
   const windOption = document.getElementById('windOption');
   const drumOption = document.getElementById('drumOption');
+  const deepSleepOption = document.getElementById('deepSleepOption'); // New UI element
   const isoChk = document.getElementById('isoChk');
   const noiseChk = document.getElementById('noiseChk');
   const windChk = document.getElementById('windChk');
   const drumChk = document.getElementById('drumChk');
+  const deepSleepChk = document.getElementById('deepSleepChk'); // New UI element
   const stageName = document.getElementById('stageName');
   const stageSub = document.getElementById('stageSub');
   const progressBar = document.getElementById('progressBar');
@@ -743,6 +761,70 @@
     };
   };
 
+  // NEW: 3D Binaural Beat Effect
+  const createDeepSleepBinaural = (ctx) => {
+    const carrierBase = 110; // A stable, low hum
+    const beatRate = 1.5;   // Delta wave frequency for deep sleep
+
+    // Left and right oscillators
+    const leftOsc = ctx.createOscillator();
+    leftOsc.type = 'sine';
+    leftOsc.frequency.value = carrierBase - beatRate / 2;
+    leftOsc.start();
+
+    const rightOsc = ctx.createOscillator();
+    rightOsc.type = 'sine';
+    rightOsc.frequency.value = carrierBase + beatRate / 2;
+    rightOsc.start();
+
+    // LFO for smooth, breathing-like volume modulation
+    const volumeLFO = ctx.createOscillator();
+    volumeLFO.type = 'sine';
+    volumeLFO.frequency.value = 0.08;
+    volumeLFO.start();
+
+    // Main gain node, connected to the volume LFO
+    const masterGain = ctx.createGain();
+    masterGain.gain.value = 0.1;
+    const volGainMod = ctx.createGain();
+    volGainMod.gain.value = 0.5; // Controls the depth of the volume wobble
+    volumeLFO.connect(volGainMod);
+    volGainMod.connect(masterGain.gain);
+
+    // Panners to create 3D spatial movement
+    const leftPanner = ctx.createStereoPanner();
+    const rightPanner = ctx.createStereoPanner();
+
+    // LFO for spatial panning
+    const panLFO = ctx.createOscillator();
+    panLFO.type = 'sine';
+    panLFO.frequency.value = 0.015; // Very slow pan rate
+    panLFO.start();
+
+    // Connect LFO to panners
+    panLFO.connect(leftPanner.pan);
+    panLFO.connect(rightPanner.pan);
+
+    // Connections
+    leftOsc.connect(leftPanner);
+    rightOsc.connect(rightPanner);
+    
+    // Merge panned signals before master gain
+    const merger = ctx.createChannelMerger(2);
+    leftPanner.connect(merger, 0, 0);
+    rightPanner.connect(merger, 0, 1);
+    merger.connect(masterGain);
+
+    return {
+      output: masterGain,
+      gainNode: masterGain,
+      setBinaural: (base, beat) => {
+        leftOsc.frequency.setValueAtTime(base - beat / 2, ctx.currentTime);
+        rightOsc.frequency.setValueAtTime(base + beat / 2, ctx.currentTime);
+      }
+    };
+  };
+
   const buildEngine = () => {
     const ctx = createAudioContext();
     
@@ -761,6 +843,7 @@
     nodes.noise = createPinkNoise(ctx);
     nodes.wind = createWindSound(ctx);
     nodes.drum = createShamanicDrum(ctx);
+    nodes.deepSleep = createDeepSleepBinaural(ctx);
 
     updateConnections();
     
@@ -804,6 +887,11 @@
       nodes.drum.output.connect(masterGain);
       nodes.drum.output.connect(nodes.reverb);
     }
+
+    // New Connection for Deep Sleep Waves
+    if (isDeepSleepEnabled) {
+      nodes.deepSleep.output.connect(masterGain);
+    }
   };
 
   const setStage = (idx, when = audioCtx ? audioCtx.currentTime : 0, ramp = 3) => {
@@ -815,6 +903,13 @@
     if (nodes.iso && isIsoEnabled) nodes.iso.setRate(s.iso, when, ramp);
     if (nodes.noise && isNoiseEnabled) {
       nodes.noise.gain.linearRampToValueAtTime(s.noise * parseFloat(intensitySlider.value), when + ramp);
+    }
+    // New logic to control the deep sleep effect
+    if (nodes.deepSleep && s.deepSleepOn) {
+        nodes.deepSleep.setBinaural(s.base, s.beat);
+        nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(0.15 * parseFloat(intensitySlider.value), when + ramp);
+    } else if (nodes.deepSleep) {
+        nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(0, when + ramp);
     }
     updateUIStage(idx);
   };
@@ -927,6 +1022,7 @@
     toggleCheckmark(noiseChk, isNoiseEnabled);
     toggleCheckmark(windChk, isWindEnabled);
     toggleCheckmark(drumChk, isDrumEnabled);
+    toggleCheckmark(deepSleepChk, isDeepSleepEnabled);
   };
 
   const updatePresetUI = (preset) => {
@@ -945,6 +1041,10 @@
     if (preset.toggles.drum !== undefined) {
       isDrumEnabled = preset.toggles.drum;
       toggleCheckmark(drumChk, isDrumEnabled);
+    }
+    if (preset.toggles.deepSleep !== undefined) {
+      isDeepSleepEnabled = preset.toggles.deepSleep;
+      toggleCheckmark(deepSleepChk, isDeepSleepEnabled);
     }
     intensitySlider.value = preset.intensity;
     intLabel.textContent = preset.intensity;
@@ -1014,6 +1114,12 @@
   drumOption.addEventListener('click', () => {
     isDrumEnabled = !isDrumEnabled;
     toggleCheckmark(drumChk, isDrumEnabled);
+    if (audioCtx) updateConnections();
+  });
+
+  deepSleepOption.addEventListener('click', () => {
+    isDeepSleepEnabled = !isDeepSleepEnabled;
+    toggleCheckmark(deepSleepChk, isDeepSleepEnabled);
     if (audioCtx) updateConnections();
   });
 
