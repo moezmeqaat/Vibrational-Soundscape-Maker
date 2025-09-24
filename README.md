@@ -1,6 +1,6 @@
 DEMO PAGE:
 
-https://dorson.github.io/Vibrational-Soundscape-/
+[https://dorson.github.io/Vibrational-Soundscape-/](https://dorson.github.io/Vibrational-Soundscape-Maker/)
 
 
 
