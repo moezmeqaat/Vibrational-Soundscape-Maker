@@ -104,50 +104,155 @@
 
 
 
-<p>
-Vibrational Soundscape is a web application that generates a relaxing and immersive audio experience through a series of "stages." This app is designed to help users transition through different mental states, from a calm, grounded state to a more blissful, transcendent one. It uses pure JavaScript and the Web Audio API, so it runs entirely in your browser without needing any external servers or plugins.
+<div style="max-width: 56rem; margin-left: auto; margin-right: auto;">
+    <style>
+        :root {
+            --bg-color: #363d2e;
+            --text-color: #fcfbeb;
+            --highlight-color: #a39c85;
+        }
 
-How It Works.
-The app works by generating and blending different layers of sound, including:
+        @keyframes blob-movement {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            33% {
+                transform: scale(1.1) translate(20px, 30px);
+            }
+            66% {
+                transform: scale(0.9) translate(-10px, -20px);
+            }
+            100% {
+                transform: scale(1) translate(0, 0);
+            }
+        }
+        
+        @keyframes blob-movement-2 {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            40% {
+                transform: scale(1.2) translate(-25px, 15px);
+            }
+            75% {
+                transform: scale(0.8) translate(15px, -30px);
+            }
+            100% {
+                transform: scale(1) translate(0, 0);
+            }
+        }
+        
+        .soundscape-container {
+            background-color: var(--bg-color);
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            color: var(--text-color);
+            line-height: 1.75;
+            font-size: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
 
-Carrier Frequencies: Two sine wave oscillators with slightly different frequencies create a binaural beat effect, a type of auditory illusion that can influence brainwave activity. The app adjusts these frequencies to correspond with different mental states.
+        .soundscape-h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--highlight-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .soundscape-text-highlight {
+            font-weight: 700;
+            color: var(--highlight-color);
+        }
 
-Pad Layer: A set of sine wave oscillators creates a soft, ambient "pad" of sound. A low-pass filter on this layer is adjusted to alter the texture of the sound as you progress through the stages.
+        .soundscape-list {
+            list-style-type: disc;
+            margin-top: 1rem;
+            margin-left: 1.5rem;
+            space-y: 0.5rem;
+        }
 
-Pink Noise: This type of noise, which sounds like a gentle hiss or rumble, is included to add warmth and a sense of natural ambience to the soundscape.
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-Isochronic Gating: A pulsing tone is used to create an isochronic beat. This is similar to a binaural beat but uses a single, pulsing tone that can be even more effective for some users in promoting relaxation and focus.
+        .animated-background::before,
+        .animated-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(50px);
+            opacity: 0.1;
+        }
 
-Reverb: A custom reverb effect is applied to all the sound layers, giving the entire soundscape a spacious, immersive quality.
+        .animated-background::before {
+            background: radial-gradient(circle at 10% 20%, #7d8469, transparent);
+            animation: blob-movement 20s infinite ease-in-out;
+        }
 
-Each of these sound layers is carefully balanced and modulated to create a smooth, evolving audio experience. The app also features a visualizer that reacts to the sound, showing a waveform and animated background rings.
+        .animated-background::after {
+            background: radial-gradient(circle at 80% 90%, #7d8469, transparent);
+            animation: blob-movement-2 25s infinite ease-in-out;
+        }
+    </style>
+    <div class="soundscape-container">
+        <div class="animated-background"></div>
+        <h1 class="soundscape-h1">Vibrational Soundscape</h1>
+        <p>
+            <span class="soundscape-text-highlight">Vibrational Soundscape</span> is a web application that generates a relaxing and immersive audio experience through a series of "stages." This app is designed to help users transition through different mental states, from a calm, grounded state to a more blissful, transcendent one. It uses pure JavaScript and the Web Audio API, so it runs entirely in your browser without needing any external servers or plugins.
+        </p>
+        
+        <p>
+            <span class="soundscape-text-highlight">How It Works.</span> The app works by generating and blending different layers of sound, including:
+            <ul class="soundscape-list">
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Carrier Frequencies:</span> Two sine wave oscillators with slightly different frequencies create a binaural beat effect, a type of auditory illusion that can influence brainwave activity. The app adjusts these frequencies to correspond with different mental states.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Pad Layer:</span> A set of sine wave oscillators creates a soft, ambient "pad" of sound. A low-pass filter on this layer is adjusted to alter the texture of the sound as you progress through the stages.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Pink Noise:</span> This type of noise, which sounds like a gentle hiss or rumble, is included to add warmth and a sense of natural ambience to the soundscape.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Isochronic Gating:</span> A pulsing tone is used to create an isochronic beat. This is similar to a binaural beat but uses a single, pulsing tone that can be even more effective for some users in promoting relaxation and focus.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Reverb:</span> A custom reverb effect is applied to all the sound layers, giving the entire soundscape a spacious, immersive quality.</li>
+            </ul>
+        </p>
+        
+        <p>
+            Each of these sound layers is carefully balanced and modulated to create a smooth, evolving audio experience. The app also features a visualizer that reacts to the sound, showing a waveform and animated background rings.
+        </p>
 
-Features.
-Multi-Stage Progression: The app guides you through five distinct stages, each with its own unique sound profile and intended effect:
+        <p>
+            <span class="soundscape-text-highlight">Features.</span>
+            <ul class="soundscape-list">
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Multi-Stage Progression:</span> The app guides you through five distinct stages, each with its own unique sound profile and intended effect: Grounding (A deep, slow hum for relaxation), Energetic (Adds nerve-tingling textures), Mental (Focuses on clarity), Intuitive (Shifts to alpha/theta brainwave frequencies), and Bliss (A rich, harmonic soundscape).</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Automated or Manual Control:</span> You can either let the app run on a timer with an automated progression through the stages or manually advance through them at your own pace.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">Customizable Session:</span> Adjust the session length and overall intensity of the soundscape to suit your preference.</li>
+                <li><span class="soundscape-text-highlight" style="font-weight: 500;">On-the-Fly Toggles:</span> You have the option to enable or disable the isochronic gating and pink noise layers.</li>
+            </ul>
+        </p>
 
-Grounding: A deep, slow hum for relaxation.
+        <p>
+            <span class="soundscape-text-highlight">Safety and Use.</span> For the best experience, headphones are highly recommended. Use a low volume to avoid discomfort. As a safety precaution, the app includes a warning to start with very low intensity and stop immediately if you feel any discomfort. This app is not medical advice and is not intended to be used while driving or operating machinery.
+        </p>
 
-Energetic: Adds nerve-tingling textures.
+        <p>
+            <span class="soundscape-text-highlight">For developers,</span> the code is well-structured and uses pure JavaScript, making it an excellent example of using the Web Audio API to create a dynamic, interactive audio application. It's a great starting point for anyone interested in sound synthesis and audio processing in the browser.
+        </p>
+    </div>
+</div>
 
-Mental: Focuses on clarity.
-
-Intuitive: Shifts to alpha/theta brainwave frequencies.
-
-Bliss: A rich, harmonic soundscape.
-
-Automated or Manual Control: You can either let the app run on a timer with an automated progression through the stages or manually advance through them at your own pace.
-
-Customizable Session: Adjust the session length and overall intensity of the soundscape to suit your preference.
-
-On-the-Fly Toggles: You have the option to enable or disable the isochronic gating and pink noise layers.
-
-Safety and Use.
-For the best experience, headphones are highly recommended. Use a low volume to avoid discomfort. As a safety precaution, the app includes a warning to start with very low intensity and stop immediately if you feel any discomfort. This app is not medical advice and is not intended to be used while driving or operating machinery.
-
-For developers, the code is well-structured and uses pure JavaScript, making it an excellent example of using the Web Audio API to create a dynamic, interactive audio application. It's a great starting point for anyone interested in sound synthesis and audio processing in the browser.
-
-    
-  </p>
 
 <script>
 // Multi-stage soundscape engine (pure JS). This update reintroduces both manual step and auto progression.
