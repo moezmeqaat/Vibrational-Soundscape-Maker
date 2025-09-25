@@ -538,6 +538,7 @@
  <option value="meditation">Meditation</option>
  <option value="relaxation">Relaxation</option>
  <option value="deep_sleep">Deep Sleep</option>
+ <option value="rem_sleep">REM Sleep Cycle</option>
  <option value="energetic">Energetic</option>
  <option value="bliss">Bliss</option>
  </select>
@@ -596,7 +597,13 @@
  <div class="checkmark-container" id="deepSleepChkContainer">
  <div id="deepSleepChk" class="checkmark"></div>
  </div>
- <span>3D Sleep Waves</span>
+ <span>Glymphatic Pulse</span>
+ </button>
+ <button id="metalPulseOption" role="switch" aria-checked="false" class="toggle-button">
+ <div class="checkmark-container" id="metalPulseChkContainer">
+ <div id="metalPulseChk" class="checkmark"></div>
+ </div>
+ <span>Falling Metal Pulse (15s, 55Hz to 20Hz)</span>
  </button>
  </div>
  </div>
@@ -696,13 +703,23 @@
 <script>
  const app = {
  PRESETS: {
- none: { stages: [{name:'Grounding', base:55, beat:2.5, padCut:900, iso:2.0, noise:0.08}, {name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}, {name:'Focus', base:140, beat:10.0, padCut:1800, iso:3.0, noise:0.06}, {name:'Intuitive', base:160, beat:7.5, padCut:2500, iso:2.0, noise:0.045}, {name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: true, deepSleep: false }, intensity: 0.6 },
- focus: { stages: [{name:'Beta Wave', base:140, beat:18.0, padCut:1500, iso:10.0, noise:0.05}, {name:'Gamma Wave', base:200, beat:40.0, padCut:2500, iso:25.0, noise:0.0}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: false }, intensity: 0.8 },
- meditation: { stages: [{name:'Alpha Wave', base:90, beat:10.0, padCut:800, iso:5.0, noise:0.04}, {name:'Theta Wave', base:60, beat:6.0, padCut:500, iso:3.0, noise:0.02}, {name:'Deep Theta', base:40, beat:4.0, padCut:300, iso:1.5, noise:0.01}], toggles: { iso: true, noise: true, wind: false, drum: true, bowl: true, deepSleep: false }, intensity: 0.5 },
- relaxation: { stages: [{name:'Relax', base:120, beat:8.0, padCut:1000, iso:4.0, noise:0.03}, {name:'Deep Calm', base:80, beat:6.0, padCut:700, iso:2.0, noise:0.01}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false }, intensity: 0.4 },
- deep_sleep: { stages: [{name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05}, {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08}, {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: true }, intensity: 0.3 },
- energetic: { stages: [{name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: false, deepSleep: false }, intensity: 0.6 },
- bliss: { stages: [{name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false }, intensity: 0.7 }
+ none: { stages: [{name:'Grounding', base:55, beat:2.5, padCut:900, iso:2.0, noise:0.08}, {name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}, {name:'Focus', base:140, beat:10.0, padCut:1800, iso:3.0, noise:0.06}, {name:'Intuitive', base:160, beat:7.5, padCut:2500, iso:2.0, noise:0.045}, {name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.6 },
+ focus: { stages: [{name:'Beta Wave', base:140, beat:18.0, padCut:1500, iso:10.0, noise:0.05}, {name:'Gamma Wave', base:200, beat:40.0, padCut:2500, iso:25.0, noise:0.0}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: false, metalPulse: false }, intensity: 0.8 },
+ meditation: { stages: [{name:'Alpha Wave', base:90, beat:10.0, padCut:800, iso:5.0, noise:0.04}, {name:'Theta Wave', base:60, beat:6.0, padCut:500, iso:3.0, noise:0.02}, {name:'Deep Theta', base:40, beat:4.0, padCut:300, iso:1.5, noise:0.01}], toggles: { iso: true, noise: true, wind: false, drum: true, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.5 },
+ relaxation: { stages: [{name:'Relax', base:120, beat:8.0, padCut:1000, iso:4.0, noise:0.03}, {name:'Deep Calm', base:80, beat:6.0, padCut:700, iso:2.0, noise:0.01}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.4 },
+ deep_sleep: { stages: [{name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05}, {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08}, {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: true, metalPulse: false }, intensity: 0.3 },
+ rem_sleep: {
+    stages: [
+        {name:'Alpha Relaxation', base:120, beat:10.0, padCut:900, iso:5.0, noise:0.03, deepSleepOn: false},
+        {name:'Theta Transition', base:90, beat:6.0, padCut:600, iso:3.0, noise:0.04, deepSleepOn: true},
+        {name:'Delta Deep Sleep', base:80, beat:2.0, padCut:300, iso:1.0, noise:0.05, deepSleepOn: true},
+        {name:'REM Phase', base:100, beat:4.5, padCut:400, iso:2.5, noise:0.04, deepSleepOn: true}
+    ],
+    toggles: { iso: true, noise: true, wind: false, drum: false, bowl: true, deepSleep: true, metalPulse: false },
+    intensity: 0.25
+ },
+ energetic: { stages: [{name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: false, deepSleep: false, metalPulse: false }, intensity: 0.6 },
+ bliss: { stages: [{name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.7 }
  },
 
  config: {
@@ -724,6 +741,7 @@
  { stateKey: 'isDrumEnabled', optionId: 'drumOption', chkId: 'drumChk', nodeKey: 'drum' },
  { stateKey: 'isBowlEnabled', optionId: 'bowlOption', chkId: 'bowlChk', nodeKey: 'bowl' },
  { stateKey: 'isDeepSleepEnabled', optionId: 'deepSleepOption', chkId: 'deepSleepChk', nodeKey: 'deepSleep' },
+ { stateKey: 'isMetalPulseEnabled', optionId: 'metalPulseOption', chkId: 'metalPulseChk', nodeKey: 'metalPulse' },
  ],
 
  state: {
@@ -738,6 +756,7 @@
  isDrumEnabled: true,
  isBowlEnabled: true,
  isDeepSleepEnabled: false,
+ isMetalPulseEnabled: false,
  },
 
  audio: {
@@ -751,10 +770,8 @@
 
  // --- Core Methods ---
  init() {
- // 1. Set initial state
  this.state.STAGES = this.PRESETS.none.stages;
 
- // 2. Cache UI elements
  this.ui = {
  playPauseBtn: document.getElementById('playPauseBtn'),
  playIcon: document.getElementById('playIcon'),
@@ -769,6 +786,8 @@
  stageSub: document.getElementById('stageSub'),
  progressBar: document.getElementById('progressBar'),
  presetSelector: document.getElementById('presetSelector'),
+ installAppBtn: document.getElementById('installAppBtn'),
+ installInstructions: document.getElementById('install-instructions'),
  };
  
  this.toggleConfigs.forEach(config => {
@@ -776,7 +795,8 @@
  this.ui[config.chkId] = document.getElementById(config.chkId);
  });
 
- // 3. Bind event listeners
+ this.checkPWA();
+
  this.ui.playPauseBtn.addEventListener('click', this.handlePlayPause.bind(this));
  this.ui.nextStageBtn.addEventListener('click', this.goToNextStage.bind(this));
  this.ui.saveAudioBtn.addEventListener('click', this.handleSaveAudio.bind(this));
@@ -790,14 +810,29 @@
  });
  });
  
- // 4. Initial UI sync
  this.initUIState();
  },
  
+ // --- PWA & Environment ---
+ checkPWA() {
+    if (window.location.protocol === 'file:') {
+        this.ui.installAppBtn.style.display = 'none';
+        const p = document.createElement('p');
+        p.innerHTML = '<strong>Note:</strong> App installation is not available when running from a local file. Please use a web server (http or https).';
+        p.style.color = 'var(--accent)';
+        this.ui.installInstructions.prepend(p);
+    }
+    
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+         this.ui.installAppBtn.style.display = 'none';
+         this.ui.installInstructions.style.display = 'none';
+    }
+ },
+
  // --- Audio Engine ---
  createAudioContext() {
  if (this.audio.ctx) {
- this.audio.ctx.close();
+     try { this.audio.ctx.close(); } catch(e) {}
  }
  this.audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
  return this.audio.ctx;
@@ -1095,14 +1130,13 @@
     leftOsc.type = rightOsc.type = 'sine'; leftOsc.start(); rightOsc.start();
     const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
     const masterGain = ctx.createGain(); masterGain.gain.value = this.config.DEEP_SLEEP_GAIN_MULTIPLIER;
-    const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1; // FIX: Reduced from 0.5 to prevent gain from going negative
+    const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
     volumeLFO.connect(volGainMod); volGainMod.connect(masterGain.gain);
     const leftPanner = ctx.createStereoPanner(), rightPanner = ctx.createStereoPanner();
     const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.015; panLFO.start();
 
-    // FIX: Create a proper stereo sweep by inverting the pan LFO for the right channel
     const panMod = ctx.createGain();
-    panMod.gain.value = 1.0; // Full sweep from -1 to 1
+    panMod.gain.value = 1.0;
     const panInverter = ctx.createGain();
     panInverter.gain.value = -1;
     
@@ -1121,71 +1155,218 @@
     }
     };
  },
+ 
+ createMetalPulse(ctx) {
+    const LOOP_DURATION_S = 15;
+    const pulseState = { timeoutId: null, isRunning: false };
+
+    const masterOutput = ctx.createGain();
+
+    // ADD A COMPRESSOR TO TAME THE PEAKS and prevent runaway resonance.
+    // This acts as an automatic volume control to prevent clipping when mixed with other sounds.
+    const compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-24, ctx.currentTime); // Start compressing sounds louder than -24dB.
+    compressor.knee.setValueAtTime(30, ctx.currentTime);      // Soft knee for a smoother transition.
+    compressor.ratio.setValueAtTime(12, ctx.currentTime);     // 12:1 ratio, acting like a soft limiter.
+    compressor.attack.setValueAtTime(0.003, ctx.currentTime); // Fast attack to catch peaks.
+    compressor.release.setValueAtTime(0.25, ctx.currentTime); // Slower release.
+    
+    masterOutput.connect(compressor);
+
+    // Main Signal Chain
+    const mainOscillator = ctx.createOscillator();
+    mainOscillator.type = 'sine';
+    const tremoloGain = ctx.createGain();
+    const volumeRampGain = ctx.createGain();
+    const pannerNode = ctx.createStereoPanner();
+    mainOscillator.connect(tremoloGain).connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
+
+    // Tremolo LFO
+    const lfoOscillator = ctx.createOscillator();
+    lfoOscillator.type = 'sine';
+    lfoOscillator.connect(tremoloGain.gain);
+
+    // Panning LFO
+    const pannerLFO = ctx.createOscillator();
+    pannerLFO.type = 'sine';
+    pannerLFO.frequency.value = 0.1;
+    pannerLFO.connect(pannerNode.pan);
+
+    // Chorus Voices
+    const chorusOscillator1 = ctx.createOscillator();
+    const chorusOscillator2 = ctx.createOscillator();
+    chorusOscillator1.type = chorusOscillator2.type = 'sine';
+    const chorusGain1 = ctx.createGain();
+    const chorusGain2 = ctx.createGain();
+    chorusOscillator1.connect(chorusGain1).connect(masterOutput);
+    chorusOscillator2.connect(chorusGain2).connect(masterOutput);
+    
+    mainOscillator.start(0);
+    lfoOscillator.start(0);
+    pannerLFO.start(0);
+    chorusOscillator1.start(0);
+    chorusOscillator2.start(0);
+
+    const scheduleCycle = () => {
+        if (!pulseState.isRunning) return;
+        const now = ctx.currentTime;
+        const endTime = now + LOOP_DURATION_S;
+
+        const params = [
+            mainOscillator.frequency, volumeRampGain.gain, lfoOscillator.frequency,
+            chorusOscillator1.frequency, chorusOscillator2.frequency,
+            chorusGain1.gain, chorusGain2.gain
+        ];
+        params.forEach(p => p.cancelScheduledValues(now));
+
+        mainOscillator.frequency.setValueAtTime(55, now);
+        volumeRampGain.gain.setValueAtTime(1.0, now);
+        lfoOscillator.frequency.setValueAtTime(4, now);
+        chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
+        chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
+        chorusGain1.gain.setValueAtTime(0.05, now);
+        chorusGain2.gain.setValueAtTime(0.05, now);
+
+        mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
+        volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
+        lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
+        chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
+        chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
+        chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
+        chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
+
+        pulseState.timeoutId = setTimeout(scheduleCycle, LOOP_DURATION_S * 1000);
+    };
+
+    const startLoop = () => {
+        if (pulseState.isRunning) return;
+        pulseState.isRunning = true;
+        scheduleCycle();
+    };
+
+    const stopLoop = () => {
+        pulseState.isRunning = false;
+        if (pulseState.timeoutId) {
+            clearTimeout(pulseState.timeoutId);
+            pulseState.timeoutId = null;
+        }
+        const now = ctx.currentTime;
+        const params = [
+            mainOscillator.frequency, volumeRampGain.gain, lfoOscillator.frequency,
+            chorusOscillator1.frequency, chorusOscillator2.frequency,
+            chorusGain1.gain, chorusGain2.gain
+        ];
+        params.forEach(p => p.cancelScheduledValues(now));
+    };
+    
+    return { output: compressor, startLoop, stopLoop };
+ },
+
+ createAudioGraph(ctx) {
+    const masterGain = ctx.createGain();
+    masterGain.connect(ctx.destination);
+    
+    const effectsGain = ctx.createGain();
+    effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
+    effectsGain.connect(masterGain);
+    
+    const nodes = { masterGain, effectsGain };
+
+    nodes.reverb = this.createReverb(ctx);
+    nodes.reverb.connect(masterGain);
+    
+    nodes.carrier = this.createCarrierPair(ctx);
+    nodes.carrier.outputLeft.connect(masterGain);
+    nodes.carrier.outputRight.connect(masterGain);
+    nodes.carrier.outputLeft.connect(nodes.reverb);
+    nodes.carrier.outputRight.connect(nodes.reverb);
+    
+    nodes.pad = this.createPadLayer(ctx);
+    nodes.pad.output.connect(masterGain);
+    nodes.pad.output.connect(nodes.reverb);
+
+    const creators = {
+        iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
+        drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural,
+        metalPulse: this.createMetalPulse
+    };
+    
+    this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
+        if (!creators[nodeKey]) return;
+        const node = creators[nodeKey].call(this, ctx);
+        const gainSwitch = ctx.createGain();
+        gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
+        
+        const output = node.output || node;
+        output.connect(gainSwitch);
+        gainSwitch.connect(effectsGain);
+        if(nodeKey !== 'deepSleep' && nodeKey !== 'metalPulse') gainSwitch.connect(nodes.reverb);
+
+        nodes[nodeKey] = { ...node, gainSwitch, source: output };
+    });
+    
+    return nodes;
+ },
 
  buildEngine() {
- const ctx = this.createAudioContext();
- this.audio.masterGain = ctx.createGain();
- this.audio.masterGain.gain.value = 0;
- this.audio.masterGain.connect(ctx.destination);
- 
- this.audio.effectsGain = ctx.createGain();
- this.audio.effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
- this.audio.effectsGain.connect(this.audio.masterGain);
- 
- this.audio.nodes.reverb = this.createReverb(ctx);
- this.audio.nodes.reverb.connect(this.audio.masterGain);
- 
- this.audio.nodes.carrier = this.createCarrierPair(ctx);
- this.audio.nodes.carrier.outputLeft.connect(this.audio.masterGain);
- this.audio.nodes.carrier.outputRight.connect(this.audio.masterGain);
- this.audio.nodes.carrier.outputLeft.connect(this.audio.nodes.reverb);
- this.audio.nodes.carrier.outputRight.connect(this.audio.nodes.reverb);
- 
- this.audio.nodes.pad = this.createPadLayer(ctx);
- this.audio.nodes.pad.output.connect(this.audio.masterGain);
- this.audio.nodes.pad.output.connect(this.audio.nodes.reverb);
-
- const creators = {
- iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
- drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural
- };
- 
- this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
- const node = creators[nodeKey].call(this, ctx);
- const gainSwitch = ctx.createGain();
- gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
- 
- const output = node.output || node;
- output.connect(gainSwitch);
- gainSwitch.connect(this.audio.effectsGain);
- if(nodeKey !== 'deepSleep') gainSwitch.connect(this.audio.nodes.reverb);
-
- this.audio.nodes[nodeKey] = { ...node, gainSwitch, source: output };
- });
- 
- this.setStage(0, ctx.currentTime, 0.1);
+    const ctx = this.createAudioContext();
+    const nodes = this.createAudioGraph(ctx);
+    
+    this.audio.ctx = ctx;
+    this.audio.nodes = nodes;
+    this.audio.masterGain = nodes.masterGain;
+    this.audio.effectsGain = nodes.effectsGain;
+    
+    this.audio.masterGain.gain.value = 0;
+    
+    this.setStage(0, ctx.currentTime, 0.1);
  },
+
+ async startEngine(isNew = false) {
+    if (isNew || !this.audio.ctx || this.audio.ctx.state === 'closed') {
+        this.buildEngine();
+    }
+    
+    try {
+        await this.audio.ctx.resume();
+    } catch(e) { console.error("Error resuming AudioContext:", e); }
+
+    const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
+    this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
+    this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
+    
+    this.updatePlayPauseButton('pause');
+    if (isNew) {
+        this.state.sessionElapsedTime = 0;
+    }
+    this.startAuto();
+
+    if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+    if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
+},
 
  setStage(idx, when, ramp = this.config.STAGE_CHANGE_RAMP_S) {
  if (!this.audio.ctx || !this.audio.nodes.carrier) return;
  this.state.currentStage = idx;
  const s = this.state.STAGES[idx];
- this.audio.nodes.carrier.setBinaural(s.base, s.beat, when, ramp);
- this.audio.nodes.pad.setFilter(s.padCut, when, ramp);
- if (this.audio.nodes.iso) this.audio.nodes.iso.setRate(s.iso, when, ramp);
- if (this.audio.nodes.noise) {
- this.audio.nodes.noise.source.gain.linearRampToValueAtTime(s.noise, when + ramp);
+ const nodes = this.audio.nodes;
+ 
+ nodes.carrier.setBinaural(s.base, s.beat, when, ramp);
+ nodes.pad.setFilter(s.padCut, when, ramp);
+ if (nodes.iso) nodes.iso.setRate(s.iso, when, ramp);
+ if (nodes.noise) {
+    nodes.noise.source.gain.linearRampToValueAtTime(s.noise, when + ramp);
  }
- if (this.audio.nodes.deepSleep) {
- const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
- this.audio.nodes.deepSleep.setBinaural(s.base, s.beat);
- this.audio.nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
+ if (nodes.deepSleep) {
+    const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
+    nodes.deepSleep.setBinaural(s.base, s.beat);
+    nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
  }
  this.updateUIStage(idx);
  },
 
  startAuto() {
- this.stopAuto(); // Ensure no multiple timers are running
+ this.stopAuto();
  this.state.lastTickTime = performance.now();
  this.state.autoplayInterval = setInterval(this.tickAutoplay.bind(this), this.config.AUTOPLAY_TICK_MS);
  },
@@ -1216,60 +1397,56 @@
  }
  },
  
- goToNextStage() {
-    // If the audio context isn't created yet, this button acts as a play command.
-    if (!this.audio.ctx) {
-        this.handlePlayPause();
+ async goToNextStage() {
+    if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+        await this.startEngine(true);
         return;
     }
 
-    // If we're on the last stage, the next action is to stop the engine.
     if (this.state.currentStage >= this.state.STAGES.length - 1) {
-        this.stopEngine();
+        await this.stopEngine();
         return;
     }
 
-    // Otherwise, advance to the next stage.
     const nextStageIndex = this.state.currentStage + 1;
     
-    // Sync the autoplay timer with the manual stage change.
     const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
     const stageDur = totalDur / this.state.STAGES.length;
     this.state.sessionElapsedTime = nextStageIndex * stageDur;
     
-    // Also reset the tick timer to avoid a large jump in elapsed time on the next tick.
     if(this.state.autoplayInterval) {
         this.state.lastTickTime = performance.now();
     }
     
     this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
 
-    // If the engine was paused ('suspended'), resume playback at the new stage.
     if (this.audio.ctx.state === 'suspended') {
-        this.resumeEngine();
+        await this.startEngine(false);
     }
  },
 
- stopEngine(callback) {
- if (!this.audio.ctx) { if(callback) callback(); return; }
- this.stopAuto();
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
- this.state.sessionElapsedTime = 0;
+ async stopEngine() {
+    if (!this.audio.ctx) return;
+    this.stopAuto();
+    if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
+    if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
+    this.state.sessionElapsedTime = 0;
 
- try {
- this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
- this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.FADE_DURATION_S);
- } catch(e) { console.error("Error stopping gain ramp:", e); }
+    try {
+        this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
+        this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.FADE_DURATION_S);
+    } catch(e) { console.error("Error stopping gain ramp:", e); }
 
- setTimeout(() => {
- try { if (this.audio.ctx) this.audio.ctx.suspend(); }
- catch(e) { console.error("Error suspending audio context:", e); }
- this.state.currentStage = -1;
- this.updatePlayPauseButton('play');
- this.updateUIStage(-1);
- if (callback) callback();
- }, this.config.FADE_DURATION_S * 1000);
+    return new Promise(resolve => {
+        setTimeout(() => {
+            try { if (this.audio.ctx && this.audio.ctx.state !== 'closed') this.audio.ctx.suspend(); }
+            catch(e) { console.error("Error suspending audio context:", e); }
+            this.state.currentStage = -1;
+            this.updatePlayPauseButton('play');
+            this.updateUIStage(-1);
+            resolve();
+        }, this.config.FADE_DURATION_S * 1000);
+    });
  },
 
  pauseEngine() {
@@ -1279,18 +1456,9 @@
  if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
- setTimeout(() => this.audio.ctx.suspend(), this.config.PAUSE_FADE_DURATION_S * 1000);
- },
-
- resumeEngine() {
- if (!this.audio.ctx || this.audio.ctx.state !== 'suspended') return;
- this.audio.ctx.resume();
- this.startAuto();
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
- this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
- const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
- this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
+ setTimeout(() => {
+    if (this.audio.ctx && this.audio.ctx.state === 'running') this.audio.ctx.suspend();
+ }, this.config.PAUSE_FADE_DURATION_S * 1000);
  },
  
  // --- UI Update Functions ---
@@ -1337,6 +1505,7 @@
  this.state.isDrumEnabled = !!toggles.drum;
  this.state.isBowlEnabled = !!toggles.bowl;
  this.state.isDeepSleepEnabled = !!toggles.deepSleep;
+ this.state.isMetalPulseEnabled = !!toggles.metalPulse;
 
  this.initUIState();
  this.ui.intensitySlider.value = preset.intensity;
@@ -1345,23 +1514,14 @@
  
  // --- Event Handlers ---
  async handlePlayPause() {
- if (!this.audio.ctx) {
- this.buildEngine();
- await this.audio.ctx.resume();
- const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
- this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
- this.updatePlayPauseButton('pause');
- this.state.sessionElapsedTime = 0;
- this.startAuto();
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
- } else if (this.audio.ctx.state === 'running') {
- this.pauseEngine();
- this.updatePlayPauseButton('play');
- } else if (this.audio.ctx.state === 'suspended') {
- this.resumeEngine();
- this.updatePlayPauseButton('pause');
- }
+    if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+        await this.startEngine(true);
+    } else if (this.audio.ctx.state === 'running') {
+        this.pauseEngine();
+        this.updatePlayPauseButton('play');
+    } else if (this.audio.ctx.state === 'suspended') {
+        await this.startEngine(false);
+    }
  },
 
  handleIntensityChange(e) {
@@ -1375,15 +1535,26 @@
  },
 
  handleToggle(stateKey, button, checkmark, nodeKey) {
- this.state[stateKey] = !this.state[stateKey];
- this.toggleCheckmark(button, checkmark, this.state[stateKey]);
- if (this.audio.ctx && this.audio.nodes[nodeKey]) {
- const targetGain = this.state[stateKey] ? 1 : 0;
- this.audio.nodes[nodeKey].gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
- }
+    this.state[stateKey] = !this.state[stateKey];
+    this.toggleCheckmark(button, checkmark, this.state[stateKey]);
+    
+    if (this.audio.ctx && this.audio.nodes[nodeKey] && this.audio.nodes[nodeKey].gainSwitch) {
+        const node = this.audio.nodes[nodeKey];
+        const targetGain = this.state[stateKey] ? 1 : 0;
+        node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
+        
+        // Special handling for nodes with independent loops
+        if (nodeKey === 'metalPulse') {
+             if (this.state[stateKey]) {
+                 if (node.startLoop) node.startLoop();
+             } else {
+                 if (node.stopLoop) node.stopLoop();
+             }
+        }
+    }
  },
 
- handlePresetChange(e) {
+ async handlePresetChange(e) {
  const presetName = e.target.value;
  const preset = this.PRESETS[presetName];
  if (!preset) return;
@@ -1392,228 +1563,124 @@
  this.updatePresetUI(preset);
  
  if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
- this.stopEngine(() => {
- this.buildEngine();
- this.audio.ctx.resume().then(() => {
- const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
- this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
- this.updatePlayPauseButton('pause');
- this.state.sessionElapsedTime = 0;
- this.startAuto();
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
- });
- });
+    await this.stopEngine();
+    await this.startEngine(true);
  }
  this.updateUIStage(-1);
  },
  
- async handleSaveAudio() {
- const btn = this.ui.saveAudioBtn;
- btn.disabled = true;
+ handleSaveAudio() {
+    const btn = this.ui.saveAudioBtn;
+    btn.disabled = true;
+    btn.textContent = 'Generating... Please Wait';
  
- let progressInterval = null;
+    // Use a timeout to allow the UI to update before the heavy work starts
+    setTimeout(async () => {
+        try {
+            const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
+            const sampleRate = 44100;
 
- try {
- const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
- const sampleRate = 44100;
+            const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
+            const nodes = this.createAudioGraph(offlineCtx);
 
- // Heuristic for simulation: 50ms processing time per second of audio.
- // A 10min (600s) track is estimated to take 30s.
- const estimatedRenderTimeMs = durationSeconds * 50;
- const startTime = performance.now();
- 
- progressInterval = setInterval(() => {
- const elapsedTime = performance.now() - startTime;
- // Cap progress at 99% until rendering is actually complete
- const percent = Math.min(99, Math.floor((elapsedTime / estimatedRenderTimeMs) * 100));
- btn.textContent = `Generating... ${percent}%`;
- // Use a slightly darker color for the progress fill to contrast
- btn.style.background = `linear-gradient(to right, var(--accent-secondary) ${percent}%, var(--accent) ${percent}%)`;
- }, 150);
+            // --- Schedule all audio events for offline rendering ---
+            
+            // Set initial gain
+            nodes.masterGain.gain.setValueAtTime(this.config.MASTER_GAIN_MULTIPLIER, 0);
 
- const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
+            // Schedule stage changes
+            const totalDur = durationSeconds;
+            const stageDur = totalDur / this.state.STAGES.length;
+            this.state.STAGES.forEach((stage, idx) => {
+                const startTime = idx * stageDur;
+                const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
 
- const nodes = this.buildOfflineEngine(offlineCtx);
+                nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
+                nodes.pad.setFilter(stage.padCut, startTime, rampTime);
+                if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
+                if (nodes.noise) {
+                    const noiseGain = stage.noise;
+                    if (startTime === 0) nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
+                    else nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
+                }
+                if (nodes.deepSleep) {
+                    const leftFreq = Math.max(8, stage.base - stage.beat / 2);
+                    const rightFreq = Math.max(8, stage.base + stage.beat / 2);
+                    if (startTime === 0) {
+                        nodes.deepSleep.leftOsc.frequency.setValueAtTime(leftFreq, 0);
+                        nodes.deepSleep.rightOsc.frequency.setValueAtTime(rightFreq, 0);
+                    } else {
+                        nodes.deepSleep.leftOsc.frequency.linearRampToValueAtTime(leftFreq, startTime + rampTime);
+                        nodes.deepSleep.rightOsc.frequency.linearRampToValueAtTime(rightFreq, startTime + rampTime);
+                    }
+                    const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled) ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : this.config.MIN_GAIN;
+                    if (startTime === 0) nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
+                    else nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
+                }
+            });
 
- // Schedule singing bowl triggers for offline rendering
- if (nodes.bowl && this.state.isBowlEnabled) {
-    for (let t = 0; t < durationSeconds; t += 60) {
-        const time = t;
-        const envelope = nodes.bowl.envelope;
-        envelope.gain.cancelScheduledValues(time);
-        envelope.gain.setValueAtTime(0, time);
-        envelope.gain.linearRampToValueAtTime(1.0, time + 0.2);
-        envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, time + 45);
-    }
- }
+            // Schedule singing bowl triggers
+            if (nodes.bowl && this.state.isBowlEnabled) {
+                for (let t = 0; t < durationSeconds; t += 60) {
+                    const envelope = nodes.bowl.envelope;
+                    envelope.gain.setValueAtTime(0, t);
+                    envelope.gain.linearRampToValueAtTime(1.0, t + 0.2);
+                    envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, t + 45);
+                }
+            }
+            
+            // Schedule shamanic drum beats
+            if (nodes.drum && this.state.isDrumEnabled) {
+                nodes.drum.source.gain.setValueAtTime(0.7, 0);
+                const customWave = this.createDrumWave(offlineCtx);
+                const scheduleOfflineBeat = (frequency, time, decay, gain) => {
+                    const osc = offlineCtx.createOscillator();
+                    osc.setPeriodicWave(customWave);
+                    osc.frequency.setValueAtTime(frequency, time);
+                    const oscGain = offlineCtx.createGain();
+                    const lowpass = offlineCtx.createBiquadFilter();
+                    lowpass.type = 'lowpass';
+                    lowpass.frequency.setValueAtTime(350, time);
+                    lowpass.Q.value = 0.2;
+                    const panner = offlineCtx.createStereoPanner();
+                    osc.connect(oscGain); oscGain.connect(lowpass); lowpass.connect(panner); panner.connect(nodes.drum.source);
+                    oscGain.gain.setValueAtTime(0, time);
+                    oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
+                    oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+                    panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
+                    osc.start(time);
+                    osc.stop(time + decay + 0.1);
+                };
+                const patternPeriod = 10.0;
+                for (let t = 0; t < durationSeconds; t += patternPeriod) {
+                    scheduleOfflineBeat(40, t, 12.0, 0.65);
+                    scheduleOfflineBeat(55, t, 4.0, 0.45);
+                }
+            }
 
- // Schedule shamanic drum beats for offline rendering
- if (nodes.drum && this.state.isDrumEnabled) {
-    nodes.drum.source.gain.setValueAtTime(0.7, 0); // Master gain for this effect
-    const customWave = this.createDrumWave(offlineCtx);
-    const scheduleOfflineBeat = (frequency, time, decay, gain) => {
-        const osc = offlineCtx.createOscillator();
-        osc.setPeriodicWave(customWave);
-        osc.frequency.setValueAtTime(frequency, time);
-        
-        const oscGain = offlineCtx.createGain();
-        const lowpass = offlineCtx.createBiquadFilter();
-        lowpass.type = 'lowpass';
-        lowpass.frequency.setValueAtTime(350, time);
-        lowpass.Q.value = 0.2;
+            // Render the audio
+            const renderedBuffer = await offlineCtx.startRendering();
 
-        const panner = offlineCtx.createStereoPanner();
-        
-        osc.connect(oscGain);
-        oscGain.connect(lowpass);
-        lowpass.connect(panner);
-        panner.connect(nodes.drum.source);
+            btn.textContent = 'Encoding WAV...';
+            const wavBlob = this.bufferToWav(renderedBuffer);
+            const url = URL.createObjectURL(wavBlob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
 
-        oscGain.gain.setValueAtTime(0, time);
-        oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-        
-        // A simple slow pan sweep for offline render
-        panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
-        
-        osc.start(time);
-        osc.stop(time + decay + 0.1);
-    };
-    
-    const patternPeriod = 10.0;
-    for (let t = 0; t < durationSeconds; t += patternPeriod) {
-        scheduleOfflineBeat(40, t, 12.0, 0.65);
-        scheduleOfflineBeat(55, t, 4.0, 0.45);
-    }
- }
-
-
- const totalDur = durationSeconds;
- const stageDur = totalDur / this.state.STAGES.length;
-
- this.state.STAGES.forEach((stage, idx) => {
- const startTime = idx * stageDur;
- const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
-
- nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
- nodes.pad.setFilter(stage.padCut, startTime, rampTime);
- if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
- 
- if (nodes.noise) {
-     const noiseGain = stage.noise;
-     if (startTime === 0) {
-         nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
-     } else {
-         nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
-     }
- }
- if (nodes.deepSleep) {
-    const leftFreq = Math.max(8, stage.base - stage.beat / 2);
-    const rightFreq = Math.max(8, stage.base + stage.beat / 2);
-
-    if (startTime === 0) {
-        nodes.deepSleep.leftOsc.frequency.setValueAtTime(leftFreq, 0);
-        nodes.deepSleep.rightOsc.frequency.setValueAtTime(rightFreq, 0);
-    } else {
-        // Replaced setValueAtTime with linearRampToValueAtTime to prevent audible clicks.
-        nodes.deepSleep.leftOsc.frequency.linearRampToValueAtTime(leftFreq, startTime + rampTime);
-        nodes.deepSleep.rightOsc.frequency.linearRampToValueAtTime(rightFreq, startTime + rampTime);
-    }
-    
-    const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled)
-        ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER
-        : this.config.MIN_GAIN;
-    
-    if (startTime === 0) {
-        nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
-    } else {
-        nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
-    }
- }
- });
-
- const masterGainValue = this.config.MASTER_GAIN_MULTIPLIER;
- nodes.masterGain.gain.setValueAtTime(masterGainValue, 0);
-
- const renderedBuffer = await offlineCtx.startRendering();
-
- clearInterval(progressInterval);
- progressInterval = null;
- 
- btn.textContent = 'Encoding WAV...';
- btn.style.background = `var(--accent-secondary)`;
-
- const wavBlob = this.bufferToWav(renderedBuffer);
-
- const url = URL.createObjectURL(wavBlob);
- const a = document.createElement('a');
- a.style.display = 'none';
- a.href = url;
- a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
- document.body.appendChild(a);
- a.click();
- window.URL.revokeObjectURL(url);
- a.remove();
-
- } catch (error) {
- console.error('Failed to save audio:', error);
- alert('An error occurred while saving the audio. Please check the console for details.');
- } finally {
- if (progressInterval) clearInterval(progressInterval);
- btn.disabled = false;
- btn.textContent = 'Save Audio';
- btn.style.background = null;
- }
- },
-
- buildOfflineEngine(ctx) {
- const masterGain = ctx.createGain();
- masterGain.connect(ctx.destination);
-
- const effectsGain = ctx.createGain();
- effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
- effectsGain.connect(masterGain);
- 
- const nodes = { masterGain, effectsGain };
-
- nodes.reverb = this.createReverb(ctx);
- nodes.reverb.connect(masterGain);
- 
- nodes.carrier = this.createCarrierPair(ctx);
- nodes.carrier.outputLeft.connect(masterGain);
- nodes.carrier.outputRight.connect(masterGain);
- nodes.carrier.outputLeft.connect(nodes.reverb);
- nodes.carrier.outputRight.connect(nodes.reverb);
- 
- nodes.pad = this.createPadLayer(ctx);
- nodes.pad.output.connect(masterGain);
- nodes.pad.output.connect(nodes.reverb);
- nodes.pad.output.gain.value = this.config.PAD_GAIN_MULTIPLIER;
-
- const creators = {
-     iso: this.createIsoLayer,
-     noise: this.createPinkNoise,
-     wind: this.createWindSound,
-     drum: (c) => ({ output: c.createGain() }), // Offline scheduling is handled separately
-     bowl: this.createSingingBowl,
-     deepSleep: this.createDeepSleepBinaural
- };
- 
- this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
- const node = creators[nodeKey].call(this, ctx);
- const gainSwitch = ctx.createGain();
- gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
- 
- const output = node.output || node;
- output.connect(gainSwitch);
- gainSwitch.connect(nodes.effectsGain);
- if (nodeKey !== 'deepSleep') gainSwitch.connect(nodes.reverb);
-
- nodes[nodeKey] = { ...node, gainSwitch, source: output };
- });
-
- return nodes;
+        } catch (error) {
+            console.error('Failed to save audio:', error);
+            alert('An error occurred while saving the audio. Please check the console for details.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save Audio';
+        }
+    }, 100);
  },
 
  bufferToWav(buffer) {
