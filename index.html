@@ -584,7 +584,7 @@
  <div class="checkmark-container" id="drumChkContainer">
  <div id="drumChk" class="checkmark"></div>
  </div>
- <span>Shamanic drum</span>
+ <span>6 BPM Shamanic drum</span>
  </button>
  <button id="bowlOption" role="switch" aria-checked="true" class="toggle-button">
  <div class="checkmark-container" id="bowlChkContainer">
@@ -899,23 +899,110 @@
  source.start(); gainLFO.start(); panLFO.start();
  return { output: panner, gainNode: mainGain };
  },
+ 
+ createDrumWave(ctx) {
+    const numHarmonics = 32;
+    const real = new Float32Array(numHarmonics);
+    const imag = new Float32Array(numHarmonics);
+    real[0] = 0;
+    imag[0] = 0;
+    for (let i = 1; i < numHarmonics; ++i) {
+        if (i % 2 !== 0) { // Odd harmonics for a square-like wave
+            real[i] = ((-1) ** ((i - 1) / 2)) * (1 / (i * i));
+        } else {
+            real[i] = 0;
+        }
+        imag[i] = 0;
+    }
+    return ctx.createPeriodicWave(real, imag, { disableNormalization: true });
+ },
 
  createShamanicDrum(ctx) {
-    const subOsc = ctx.createOscillator(); subOsc.type = 'sine'; subOsc.frequency.value = 35; subOsc.start();
-    const tremoloLFO = ctx.createOscillator(); tremoloLFO.type = 'sine'; tremoloLFO.frequency.value = 1.5; tremoloLFO.start();
-    
-    const lfoDepth = ctx.createGain();
-    lfoDepth.gain.value = 0.4; // Modulation depth must be <= base gain to avoid negative values
-    
-    const tremoloGain = ctx.createGain();
-    tremoloGain.gain.value = 0.5; // Base gain, so final gain will be in [0.1, 0.9] range
+    const mainGain = ctx.createGain();
+    mainGain.gain.value = 0.7;
 
-    tremoloLFO.connect(lfoDepth);
-    lfoDepth.connect(tremoloGain.gain); // The LFO signal is ADDED to the gain AudioParam's intrinsic value.
+    const drumState = {
+        timeoutId: null,
+        nextBeatTime1: 0.0,
+        nextBeatTime2: 0.0,
+        customWave: this.createDrumWave(ctx),
+        drumFreq1: 40,
+        drumFreq2: 55,
+        patternPeriod: 10.0, // 6 BPM (60s / 10s)
+    };
 
-    const mainGain = ctx.createGain(); mainGain.gain.value = 0.15; // Increased base volume
-    subOsc.connect(tremoloGain); tremoloGain.connect(mainGain);
-    return { output: mainGain, gainNode: mainGain };
+    const scheduleBeat = (frequency, time, decay, gain) => {
+        if (ctx.state !== 'running') return;
+        
+        const osc = ctx.createOscillator();
+        osc.setPeriodicWave(drumState.customWave);
+        
+        const freqVariation = (Math.random() - 0.5) * 2;
+        osc.frequency.value = frequency + freqVariation;
+        
+        const oscGain = ctx.createGain();
+        const lowpass = ctx.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.setValueAtTime(350, time);
+        lowpass.Q.value = 0.2;
+
+        const panner = ctx.createStereoPanner();
+        
+        osc.connect(oscGain);
+        oscGain.connect(lowpass);
+        lowpass.connect(panner);
+        panner.connect(mainGain);
+
+        const gainVariation = (Math.random() - 0.5) * 0.2;
+        const finalGain = gain + gainVariation;
+        
+        oscGain.gain.setValueAtTime(0, time);
+        oscGain.gain.linearRampToValueAtTime(finalGain, time + 0.01);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+        
+        const panDuration = 25.0;
+        const panTarget = (Math.random() - 0.5) * 1.8;
+        panner.pan.setValueAtTime(0, time);
+        panner.pan.linearRampToValueAtTime(panTarget, time + panDuration);
+
+        osc.start(time);
+        osc.stop(time + decay + 0.1);
+    };
+
+    const scheduler = () => {
+        if (drumState.timeoutId === null) return;
+
+        const now = ctx.currentTime;
+        const lookahead = 0.1;
+
+        if (drumState.nextBeatTime1 < now + lookahead) {
+            scheduleBeat(drumState.drumFreq1, drumState.nextBeatTime1, 12.0, 0.65);
+            drumState.nextBeatTime1 += drumState.patternPeriod;
+        }
+
+        if (drumState.nextBeatTime2 < now + lookahead) {
+            scheduleBeat(drumState.drumFreq2, drumState.nextBeatTime2, 4.0, 0.45);
+            drumState.nextBeatTime2 += drumState.patternPeriod;
+        }
+        
+        drumState.timeoutId = setTimeout(scheduler, 25);
+    };
+
+    const startLoop = () => {
+        if (drumState.timeoutId !== null) return;
+        drumState.nextBeatTime1 = ctx.currentTime;
+        drumState.nextBeatTime2 = ctx.currentTime;
+        drumState.timeoutId = setTimeout(scheduler, 0);
+    };
+    
+    const stopLoop = () => {
+        if (drumState.timeoutId !== null) {
+            clearTimeout(drumState.timeoutId);
+            drumState.timeoutId = null;
+        }
+    };
+    
+    return { output: mainGain, gainNode: mainGain, startLoop, stopLoop };
  },
 
  createSingingBowl(ctx) {
@@ -1167,6 +1254,7 @@
  if (!this.audio.ctx) { if(callback) callback(); return; }
  this.stopAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
  this.state.sessionElapsedTime = 0;
 
  try {
@@ -1188,6 +1276,7 @@
  if (!this.audio.ctx || this.audio.ctx.state !== 'running') return;
  this.stopAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
  setTimeout(() => this.audio.ctx.suspend(), this.config.PAUSE_FADE_DURATION_S * 1000);
@@ -1198,6 +1287,7 @@
  this.audio.ctx.resume();
  this.startAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
  this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
@@ -1264,6 +1354,7 @@
  this.state.sessionElapsedTime = 0;
  this.startAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
  } else if (this.audio.ctx.state === 'running') {
  this.pauseEngine();
  this.updatePlayPauseButton('play');
@@ -1310,6 +1401,7 @@
  this.state.sessionElapsedTime = 0;
  this.startAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
  });
  });
  }
@@ -1355,6 +1447,47 @@
         envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, time + 45);
     }
  }
+
+ // Schedule shamanic drum beats for offline rendering
+ if (nodes.drum && this.state.isDrumEnabled) {
+    nodes.drum.source.gain.setValueAtTime(0.7, 0); // Master gain for this effect
+    const customWave = this.createDrumWave(offlineCtx);
+    const scheduleOfflineBeat = (frequency, time, decay, gain) => {
+        const osc = offlineCtx.createOscillator();
+        osc.setPeriodicWave(customWave);
+        osc.frequency.setValueAtTime(frequency, time);
+        
+        const oscGain = offlineCtx.createGain();
+        const lowpass = offlineCtx.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.setValueAtTime(350, time);
+        lowpass.Q.value = 0.2;
+
+        const panner = offlineCtx.createStereoPanner();
+        
+        osc.connect(oscGain);
+        oscGain.connect(lowpass);
+        lowpass.connect(panner);
+        panner.connect(nodes.drum.source);
+
+        oscGain.gain.setValueAtTime(0, time);
+        oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+        
+        // A simple slow pan sweep for offline render
+        panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
+        
+        osc.start(time);
+        osc.stop(time + decay + 0.1);
+    };
+    
+    const patternPeriod = 10.0;
+    for (let t = 0; t < durationSeconds; t += patternPeriod) {
+        scheduleOfflineBeat(40, t, 12.0, 0.65);
+        scheduleOfflineBeat(55, t, 4.0, 0.45);
+    }
+ }
+
 
  const totalDur = durationSeconds;
  const stageDur = totalDur / this.state.STAGES.length;
@@ -1459,8 +1592,12 @@
  nodes.pad.output.gain.value = this.config.PAD_GAIN_MULTIPLIER;
 
  const creators = {
- iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
- drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural
+     iso: this.createIsoLayer,
+     noise: this.createPinkNoise,
+     wind: this.createWindSound,
+     drum: (c) => ({ output: c.createGain() }), // Offline scheduling is handled separately
+     bowl: this.createSingingBowl,
+     deepSleep: this.createDeepSleepBinaural
  };
  
  this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
