@@ -1163,44 +1163,54 @@
     const masterOutput = ctx.createGain();
 
     // ADD A COMPRESSOR TO TAME THE PEAKS and prevent runaway resonance.
-    // This acts as an automatic volume control to prevent clipping when mixed with other sounds.
     const compressor = ctx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-24, ctx.currentTime); // Start compressing sounds louder than -24dB.
-    compressor.knee.setValueAtTime(30, ctx.currentTime);      // Soft knee for a smoother transition.
-    compressor.ratio.setValueAtTime(12, ctx.currentTime);     // 12:1 ratio, acting like a soft limiter.
-    compressor.attack.setValueAtTime(0.003, ctx.currentTime); // Fast attack to catch peaks.
-    compressor.release.setValueAtTime(0.25, ctx.currentTime); // Slower release.
+    compressor.threshold.setValueAtTime(-24, ctx.currentTime);
+    compressor.knee.setValueAtTime(30, ctx.currentTime);
+    compressor.ratio.setValueAtTime(12, ctx.currentTime);
+    compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+    compressor.release.setValueAtTime(0.25, ctx.currentTime);
     
     masterOutput.connect(compressor);
 
-    // Main Signal Chain
+    // Main Signal Chain & Oscillators
     const mainOscillator = ctx.createOscillator();
-    mainOscillator.type = 'sine';
     const tremoloGain = ctx.createGain();
     const volumeRampGain = ctx.createGain();
     const pannerNode = ctx.createStereoPanner();
-    mainOscillator.connect(tremoloGain).connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
-
-    // Tremolo LFO
     const lfoOscillator = ctx.createOscillator();
-    lfoOscillator.type = 'sine';
-    lfoOscillator.connect(tremoloGain.gain);
-
-    // Panning LFO
     const pannerLFO = ctx.createOscillator();
-    pannerLFO.type = 'sine';
-    pannerLFO.frequency.value = 0.1;
-    pannerLFO.connect(pannerNode.pan);
-
-    // Chorus Voices
     const chorusOscillator1 = ctx.createOscillator();
     const chorusOscillator2 = ctx.createOscillator();
-    chorusOscillator1.type = chorusOscillator2.type = 'sine';
     const chorusGain1 = ctx.createGain();
     const chorusGain2 = ctx.createGain();
+
+    // --- Set types and initial values BEFORE starting oscillators to prevent defaults (e.g., 440hz) ---
+    mainOscillator.type = 'sine';
+    mainOscillator.frequency.value = 55;
+
+    lfoOscillator.type = 'sine';
+    lfoOscillator.frequency.value = 4;
+
+    pannerLFO.type = 'sine';
+    pannerLFO.frequency.value = 0.1;
+
+    chorusOscillator1.type = chorusOscillator2.type = 'sine';
+    chorusOscillator1.frequency.value = 55 * 0.5;
+    chorusOscillator2.frequency.value = 55 * 0.5;
+    
+    // Start gains at 0 to avoid any sound until the effect loop is explicitly started
+    volumeRampGain.gain.value = 0;
+    chorusGain1.gain.value = 0;
+    chorusGain2.gain.value = 0;
+
+    // Connect nodes
+    mainOscillator.connect(tremoloGain).connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
+    lfoOscillator.connect(tremoloGain.gain);
+    pannerLFO.connect(pannerNode.pan);
     chorusOscillator1.connect(chorusGain1).connect(masterOutput);
     chorusOscillator2.connect(chorusGain2).connect(masterOutput);
     
+    // Start oscillators
     mainOscillator.start(0);
     lfoOscillator.start(0);
     pannerLFO.start(0);
@@ -1251,12 +1261,14 @@
             pulseState.timeoutId = null;
         }
         const now = ctx.currentTime;
+        const gains = [volumeRampGain.gain, chorusGain1.gain, chorusGain2.gain];
         const params = [
-            mainOscillator.frequency, volumeRampGain.gain, lfoOscillator.frequency,
-            chorusOscillator1.frequency, chorusOscillator2.frequency,
-            chorusGain1.gain, chorusGain2.gain
+            mainOscillator.frequency, lfoOscillator.frequency,
+            chorusOscillator1.frequency, chorusOscillator2.frequency, ...gains
         ];
         params.forEach(p => p.cancelScheduledValues(now));
+        // Fade out gains to prevent clicks.
+        gains.forEach(g => g.linearRampToValueAtTime(0, now + 0.1));
     };
     
     return { output: compressor, startLoop, stopLoop };
@@ -1341,8 +1353,10 @@
     }
     this.startAuto();
 
-    if (this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
-    if (this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
+    // Start loops for any effects that should be active
+    if (this.state.isBowlEnabled && this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+    if (this.state.isDrumEnabled && this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
+    if (this.state.isMetalPulseEnabled && this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.startLoop();
 },
 
  setStage(idx, when, ramp = this.config.STAGE_CHANGE_RAMP_S) {
@@ -1430,6 +1444,7 @@
     this.stopAuto();
     if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
     if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
+    if (this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.stopLoop();
     this.state.sessionElapsedTime = 0;
 
     try {
@@ -1454,6 +1469,7 @@
  this.stopAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
  if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
+ if (this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.stopLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
  setTimeout(() => {
@@ -1544,11 +1560,11 @@
         node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
         
         // Special handling for nodes with independent loops
-        if (nodeKey === 'metalPulse') {
+        if (node.startLoop && node.stopLoop) {
              if (this.state[stateKey]) {
-                 if (node.startLoop) node.startLoop();
+                 node.startLoop();
              } else {
-                 if (node.stopLoop) node.stopLoop();
+                 node.stopLoop();
              }
         }
     }
