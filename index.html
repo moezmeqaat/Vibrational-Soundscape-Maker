@@ -4,6 +4,8 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Binaural Beats & Sound Therapy for Focus, Meditation & Sleep</title>
+ <meta name="theme-color" content="#d4a017">
+ <link rel="manifest" href="manifest.json">
  <style>
  :root {
  --bg: #1a120b;
@@ -215,7 +217,7 @@
 
  /* --- Info Section --- */
  .info-cards {
- margin-bottom: 6rem;
+ margin-bottom: 1rem; /* Adjusted margin */
  }
  .info-cards > .panel + .panel {
  margin-top: 1rem;
@@ -227,16 +229,16 @@
  margin-top: 0;
  margin-bottom: 0.5rem;
  }
- .info-panel p, .info-panel ol {
+ .info-panel p, .info-panel ol, .info-panel ul {
  font-size: 0.875rem;
  line-height: 1.625;
  margin: 0;
  }
- .info-panel ol {
+ .info-panel ol, .info-panel ul {
  padding-left: 1.25rem;
  margin-top: 0.5rem;
  }
- .info-panel ol > li + li {
+ .info-panel ol > li + li, .info-panel ul > li + li {
  margin-top: 0.25rem;
  }
 
@@ -342,6 +344,50 @@
  background-color: rgba(255, 255, 255, 0.1);
  }
  
+ .button-row {
+ display: flex;
+ gap: 1rem;
+ align-items: center;
+ }
+ .settings-button {
+ padding: 0.8rem 1.2rem;
+ border-radius: 0.75rem;
+ font-weight: 600;
+ font-size: 1.1rem;
+ border: none;
+ cursor: pointer;
+ transition: background-color 150ms, transform 150ms, border-color 150ms;
+ text-decoration: none;
+ display: inline-block;
+ text-align: center;
+ }
+ .settings-button:active {
+ transform: scale(0.97);
+ }
+ .save-audio-button {
+ background-color: var(--accent);
+ color: var(--bg);
+ }
+ .save-audio-button:hover {
+ background-color: hsl(44, 78%, 60%);
+ }
+ .save-audio-button:disabled {
+ background-color: var(--bg-secondary);
+ color: var(--muted);
+ cursor: not-allowed;
+ transform: none;
+ }
+ .install-app-button {
+ background-color: transparent;
+ border: 2px solid var(--accent-secondary);
+ color: var(--accent);
+ padding: calc(0.8rem - 2px) calc(1.2rem - 2px);
+ }
+ .install-app-button:hover {
+ background-color: var(--bg-secondary);
+ border-color: var(--accent);
+ }
+ 
  /* --- Media Queries --- */
  @media (min-width: 640px) {
  body {
@@ -371,31 +417,50 @@
  border-left: 10px solid white;
  border-right: 10px solid white;
  }
+
+ /* --- Slider Styles --- */
  input[type="range"] {
  -webkit-appearance: none; appearance: none;
  background: transparent; width: 100%; cursor: pointer;
  }
+ /* Track */
  input[type="range"]::-webkit-slider-runnable-track {
- background: var(--bg-secondary); height: 8px; border-radius: 4px;
- box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+ background: var(--bg-secondary);
+ height: 0.7rem;
+ border-radius: 0.5rem;
+ background-image: radial-gradient(rgba(100, 100, 50, 0.33) 0.15rem, transparent 0px);
+ background-repeat: repeat;
+ background-size: 0.7rem 0.7rem;
+ background-position: left;
  }
- input[type="range"]::-webkit-slider-thumb {
- -webkit-appearance: none; appearance: none;
- height: 24px; width: 24px; background-color: var(--accent); border-radius: 50%;
- margin-top: -8px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
- transition: all 0.2s ease-in-out;
- }
- input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.1); }
  input[type="range"]::-moz-range-track {
- background: var(--bg-secondary); height: 0.7rem; border-radius: 0.5rem;
-  background-image: radial-gradient(rgba(100,100,50,0.33) 0.15rem, transparent 0px);
-  background-repeat: repeat; 
-  background-size: 0.7rem 0.7rem;
-  background-position: left;
+ background: var(--bg-secondary);
+ height: 0.7rem;
+ border-radius: 0.5rem;
+ background-image: radial-gradient(rgba(100, 100, 50, 0.33) 0.15rem, transparent 0px);
+ background-repeat: repeat;
+ background-size: 0.7rem 0.7rem;
+ background-position: left;
+ }
+ /* Thumb */
+ input[type="range"]::-webkit-slider-thumb {
+ -webkit-appearance: none;
+ appearance: none;
+ height: 2rem;
+ width: 1rem;
+ background-color: var(--accent);
+ border-radius: 10%;
+ border: 0px;
+ border-bottom: 0.15rem double green;
+ margin-top: -0.65rem; /* Vertically center thumb on track */
  }
  input[type="range"]::-moz-range-thumb {
- height: 2rem; width: 1rem; background-color: var(--accent);
- border-radius: 10%; border: 0px; border-bottom: 0.15rem double green;
+ height: 2rem;
+ width: 1rem;
+ background-color: var(--accent);
+ border-radius: 10%;
+ border: 0px;
+ border-bottom: 0.15rem double green;
  }
  
  /* --- CSS Gradient Blob Animation (Unchanged) --- */
@@ -449,6 +514,12 @@
  </div>
 
  <div class="panel settings-panel">
+ <div class="settings-group">
+ <div class="button-row">
+ <button id="saveAudioBtn" class="settings-button save-audio-button">Save Audio</button>
+ <a href="#install-instructions" id="installAppBtn" class="settings-button install-app-button">Install App</a>
+ </div>
+ </div>
  <div class="settings-group">
  <h2>Presets</h2>
  <label for="presetSelector">Select a Preset</label>
@@ -535,6 +606,16 @@
  <p>Start at low volume. Stop if you feel discomfort. Not for use while driving or operating machinery.</p>
  </div>
  </div>
+
+ <section id="install-instructions" class="panel info-panel">
+ <h3>Install as an App</h3>
+ <p>For quick offline access, you can install this soundscape generator on your device. This adds an icon to your home screen or desktop, just like a native app.</p>
+ <ul style="padding-left: 1.25rem; margin-top: 0.5rem; list-style-type: disc;">
+ <li><strong>Desktop (Chrome, Edge):</strong> Click the three-dot menu icon ( <svg style="display:inline; vertical-align: middle;" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg> ) in the top-right corner, open the 'Save and Share' submenu, and then click 'Install...'. On some versions, you might see an install icon directly in the address bar.</li>
+ <li><strong>iPhone / iPad (Safari):</strong> Tap the 'Share' icon ( <svg style="display:inline; vertical-align: middle;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> ), then scroll down and select 'Add to Home Screen'.</li>
+ <li><strong>Android (Chrome):</strong> Tap the three-dot menu icon ( <svg style="display:inline; vertical-align: middle;" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg> ), then select 'Install app' or 'Add to Home screen'.</li>
+ </ul>
+ </section>
 
  <section class="about-section">
  <hr>
@@ -661,6 +742,7 @@
  playIcon: document.getElementById('playIcon'),
  playPauseLabel: document.getElementById('playPauseLabel'),
  nextStageBtn: document.getElementById('nextStageBtn'),
+ saveAudioBtn: document.getElementById('saveAudioBtn'),
  lengthSlider: document.getElementById('lengthSlider'),
  intensitySlider: document.getElementById('intensity'),
  lenLabel: document.getElementById('lenLabel'),
@@ -679,6 +761,7 @@
  // 3. Bind event listeners
  this.ui.playPauseBtn.addEventListener('click', this.handlePlayPause.bind(this));
  this.ui.nextStageBtn.addEventListener('click', this.goToNextStage.bind(this));
+ this.ui.saveAudioBtn.addEventListener('click', this.handleSaveAudio.bind(this));
  this.ui.lengthSlider.addEventListener('input', e => this.ui.lenLabel.textContent = e.target.value);
  this.ui.intensitySlider.addEventListener('input', this.handleIntensityChange.bind(this));
  this.ui.presetSelector.addEventListener('change', this.handlePresetChange.bind(this));
@@ -822,7 +905,7 @@
  const merger = ctx.createChannelMerger(2);
  leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1);
  merger.connect(masterGain);
- return { output: masterGain, gainNode: masterGain, setBinaural: (base, beat) => {
+ return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat) => {
  leftOsc.frequency.setValueAtTime(base - beat / 2, ctx.currentTime);
  rightOsc.frequency.setValueAtTime(base + beat / 2, ctx.currentTime);
  }
@@ -1078,6 +1161,180 @@
  });
  }
  this.updateUIStage(-1);
+ },
+ 
+ async handleSaveAudio() {
+ const btn = this.ui.saveAudioBtn;
+ btn.disabled = true;
+ 
+ let progressInterval = null;
+
+ try {
+ const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
+ const sampleRate = 44100;
+
+ // Heuristic for simulation: 50ms processing time per second of audio.
+ // A 10min (600s) track is estimated to take 30s.
+ const estimatedRenderTimeMs = durationSeconds * 50;
+ const startTime = performance.now();
+ 
+ progressInterval = setInterval(() => {
+ const elapsedTime = performance.now() - startTime;
+ // Cap progress at 99% until rendering is actually complete
+ const percent = Math.min(99, Math.floor((elapsedTime / estimatedRenderTimeMs) * 100));
+ btn.textContent = `Generating... ${percent}%`;
+ // Use a slightly darker color for the progress fill to contrast
+ btn.style.background = `linear-gradient(to right, var(--accent-secondary) ${percent}%, var(--accent) ${percent}%)`;
+ }, 150);
+
+ const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
+
+ const nodes = this.buildOfflineEngine(offlineCtx);
+
+ const totalDur = durationSeconds;
+ const stageDur = totalDur / this.state.STAGES.length;
+
+ this.state.STAGES.forEach((stage, idx) => {
+ const startTime = idx * stageDur;
+ const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
+
+ nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
+ nodes.pad.setFilter(stage.padCut, startTime, rampTime);
+ if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
+ 
+ if (nodes.noise) {
+     const noiseGain = stage.noise * parseFloat(this.ui.intensitySlider.value);
+     if (startTime === 0) {
+         nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
+     } else {
+         nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
+     }
+ }
+ if (nodes.deepSleep) {
+     nodes.deepSleep.leftOsc.frequency.setValueAtTime(stage.base - stage.beat / 2, startTime);
+     nodes.deepSleep.rightOsc.frequency.setValueAtTime(stage.base + stage.beat / 2, startTime);
+     const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled)
+         ? (this.config.DEEP_SLEEP_GAIN_MULTIPLIER * parseFloat(this.ui.intensitySlider.value))
+         : this.config.MIN_GAIN;
+     
+     if (startTime === 0) {
+         nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
+     } else {
+         nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
+     }
+ }
+ });
+
+ const masterGainValue = this.config.MASTER_GAIN_MULTIPLIER * parseFloat(this.ui.intensitySlider.value);
+ nodes.masterGain.gain.setValueAtTime(masterGainValue, 0);
+
+ const renderedBuffer = await offlineCtx.startRendering();
+
+ clearInterval(progressInterval);
+ progressInterval = null;
+ 
+ btn.textContent = 'Encoding WAV...';
+ btn.style.background = `var(--accent-secondary)`;
+
+ const wavBlob = this.bufferToWav(renderedBuffer);
+
+ const url = URL.createObjectURL(wavBlob);
+ const a = document.createElement('a');
+ a.style.display = 'none';
+ a.href = url;
+ a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
+ document.body.appendChild(a);
+ a.click();
+ window.URL.revokeObjectURL(url);
+ a.remove();
+
+ } catch (error) {
+ console.error('Failed to save audio:', error);
+ alert('An error occurred while saving the audio. Please check the console for details.');
+ } finally {
+ if (progressInterval) clearInterval(progressInterval);
+ btn.disabled = false;
+ btn.textContent = 'Save Audio';
+ btn.style.background = null;
+ }
+ },
+
+ buildOfflineEngine(ctx) {
+ const masterGain = ctx.createGain();
+ masterGain.connect(ctx.destination);
+ 
+ const nodes = { masterGain };
+
+ nodes.reverb = this.createReverb(ctx);
+ nodes.reverb.connect(masterGain);
+ 
+ nodes.carrier = this.createCarrierPair(ctx);
+ nodes.carrier.outputLeft.connect(masterGain);
+ nodes.carrier.outputRight.connect(masterGain);
+ nodes.carrier.outputLeft.connect(nodes.reverb);
+ nodes.carrier.outputRight.connect(nodes.reverb);
+ 
+ nodes.pad = this.createPadLayer(ctx);
+ nodes.pad.output.connect(masterGain);
+ nodes.pad.output.connect(nodes.reverb);
+ nodes.pad.output.gain.value = this.config.PAD_GAIN_MULTIPLIER * parseFloat(this.ui.intensitySlider.value);
+
+ const creators = {
+ iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
+ drum: this.createShamanicDrum, deepSleep: this.createDeepSleepBinaural
+ };
+ 
+ this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
+ const node = creators[nodeKey].call(this, ctx);
+ const gainSwitch = ctx.createGain();
+ gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
+ 
+ const output = node.output || node;
+ output.connect(gainSwitch);
+ gainSwitch.connect(masterGain);
+ if (nodeKey !== 'deepSleep') gainSwitch.connect(nodes.reverb);
+
+ nodes[nodeKey] = { ...node, gainSwitch, source: output };
+ });
+
+ return nodes;
+ },
+
+ bufferToWav(buffer) {
+ const numOfChan = buffer.numberOfChannels, length = buffer.length * numOfChan * 2 + 44;
+ const bufferOut = new ArrayBuffer(length), view = new DataView(bufferOut);
+ const channels = [];
+ let i, sample, offset = 0, pos = 0;
+
+ const writeString = (v, o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+
+ writeString(view, pos, 'RIFF'); pos += 4;
+ view.setUint32(pos, length - 8, true); pos += 4;
+ writeString(view, pos, 'WAVE'); pos += 4;
+ writeString(view, pos, 'fmt '); pos += 4;
+ view.setUint32(pos, 16, true); pos += 4;
+ view.setUint16(pos, 1, true); pos += 2;
+ view.setUint16(pos, numOfChan, true); pos += 2;
+ view.setUint32(pos, buffer.sampleRate, true); pos += 4;
+ view.setUint32(pos, buffer.sampleRate * 2 * numOfChan, true); pos += 4;
+ view.setUint16(pos, numOfChan * 2, true); pos += 2;
+ view.setUint16(pos, 16, true); pos += 2;
+ writeString(view, pos, 'data'); pos += 4;
+ view.setUint32(pos, length - pos - 4, true); pos += 4;
+
+ for (i = 0; i < buffer.numberOfChannels; i++) channels.push(buffer.getChannelData(i));
+
+ while (pos < length) {
+ for (i = 0; i < numOfChan; i++) {
+ sample = Math.max(-1, Math.min(1, channels[i][offset]));
+ sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+ view.setInt16(pos, sample, true);
+ pos += 2;
+ }
+ offset++;
+ }
+ 
+ return new Blob([view], { type: 'audio/wav' });
  },
  };
  
