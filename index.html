@@ -757,6 +757,7 @@
  isBowlEnabled: true,
  isDeepSleepEnabled: false,
  isMetalPulseEnabled: false,
+ isInteracting: false,
  },
 
  audio: {
@@ -769,6 +770,16 @@
  ui: {},
 
  // --- Core Methods ---
+ debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+ },
+ 
  init() {
  this.state.STAGES = this.PRESETS.none.stages;
 
@@ -800,14 +811,14 @@
  this.ui.playPauseBtn.addEventListener('click', this.handlePlayPause.bind(this));
  this.ui.nextStageBtn.addEventListener('click', this.goToNextStage.bind(this));
  this.ui.saveAudioBtn.addEventListener('click', this.handleSaveAudio.bind(this));
- this.ui.lengthSlider.addEventListener('input', e => this.ui.lenLabel.textContent = e.target.value);
- this.ui.intensitySlider.addEventListener('input', this.handleIntensityChange.bind(this));
- this.ui.presetSelector.addEventListener('change', this.handlePresetChange.bind(this));
+ this.ui.lengthSlider.addEventListener('input', this.debounce(e => this.ui.lenLabel.textContent = e.target.value, 50));
+ this.ui.intensitySlider.addEventListener('input', this.debounce(this.handleIntensityChange.bind(this), 50));
+ this.ui.presetSelector.addEventListener('change', this.debounce(this.handlePresetChange.bind(this), 100));
  
  this.toggleConfigs.forEach(config => {
- this.ui[config.optionId].addEventListener('click', () => {
- this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
- });
+    this.ui[config.optionId].addEventListener('click', this.debounce(() => {
+        this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
+    }, 50));
  });
  
  this.initUIState();
@@ -850,10 +861,15 @@
  return conv;
  },
  
- createCarrierPair(ctx) {
+ createCarrierPair(ctx, initialStage) {
  const left = ctx.createOscillator(), right = ctx.createOscillator();
  left.type = right.type = 'sine';
- left.frequency.value = right.frequency.value = 60;
+
+ const initialBase = initialStage.base;
+ const initialBeat = initialStage.beat;
+ left.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
+ right.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
+ 
  left.start(); right.start();
  
  const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.06;
@@ -909,10 +925,10 @@
  const g = ctx.createGain(); src.connect(g); src.start(); return g;
  },
 
- createIsoLayer(ctx) {
+ createIsoLayer(ctx, initialStage) {
  const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 80;
  const outG = ctx.createGain();
- const gate = ctx.createOscillator(); gate.type = 'sine'; gate.frequency.value = 4.0;
+ const gate = ctx.createOscillator(); gate.type = 'sine'; gate.frequency.setValueAtTime(initialStage.iso, ctx.currentTime);
  const gateG = ctx.createGain(); gateG.gain.value = 0.6;
  gate.connect(gateG); gateG.connect(outG.gain);
  osc.connect(outG); osc.start(); gate.start();
@@ -1125,9 +1141,15 @@
     return { output: panner, gainNode: mainGain, trigger, startLoop, stopLoop, envelope };
  },
 
- createDeepSleepBinaural(ctx) {
+ createDeepSleepBinaural(ctx, initialStage) {
     const leftOsc = ctx.createOscillator(), rightOsc = ctx.createOscillator();
-    leftOsc.type = rightOsc.type = 'sine'; leftOsc.start(); rightOsc.start();
+    leftOsc.type = rightOsc.type = 'sine';
+    const initialBase = initialStage.base;
+    const initialBeat = initialStage.beat;
+    leftOsc.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
+    rightOsc.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
+    leftOsc.start(); rightOsc.start();
+    
     const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
     const masterGain = ctx.createGain(); masterGain.gain.value = this.config.DEEP_SLEEP_GAIN_MULTIPLIER;
     const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
@@ -1149,133 +1171,99 @@
     const merger = ctx.createChannelMerger(2);
     leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1);
     merger.connect(masterGain);
-    return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat) => {
-        leftOsc.frequency.setValueAtTime(base - beat / 2, ctx.currentTime);
-        rightOsc.frequency.setValueAtTime(base + beat / 2, ctx.currentTime);
+    return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat, when = ctx.currentTime, ramp = this.config.STAGE_CHANGE_RAMP_S) => {
+        const newLeftFreq = Math.max(8, base - beat / 2);
+        const newRightFreq = Math.max(8, base + beat / 2);
+        leftOsc.frequency.linearRampToValueAtTime(newLeftFreq, when + ramp);
+        rightOsc.frequency.linearRampToValueAtTime(newRightFreq, when + ramp);
     }
     };
  },
  
- createMetalPulse(ctx) {
+ async createMetalPulse(ctx) {
     const LOOP_DURATION_S = 15;
-    const pulseState = { timeoutId: null, isRunning: false };
-
-    const masterOutput = ctx.createGain();
-
-    // ADD A COMPRESSOR TO TAME THE PEAKS and prevent runaway resonance.
-    const compressor = ctx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-24, ctx.currentTime);
-    compressor.knee.setValueAtTime(30, ctx.currentTime);
-    compressor.ratio.setValueAtTime(12, ctx.currentTime);
-    compressor.attack.setValueAtTime(0.003, ctx.currentTime);
-    compressor.release.setValueAtTime(0.25, ctx.currentTime);
+    const sampleRate = ctx.sampleRate;
+    const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * sampleRate), sampleRate);
     
+    const masterOutput = offlineCtx.createGain();
+    const compressor = offlineCtx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-24, 0);
+    compressor.knee.setValueAtTime(30, 0);
+    compressor.ratio.setValueAtTime(12, 0);
+    compressor.attack.setValueAtTime(0.003, 0);
+    compressor.release.setValueAtTime(0.25, 0);
     masterOutput.connect(compressor);
+    compressor.connect(offlineCtx.destination);
 
-    // Main Signal Chain & Oscillators
-    const mainOscillator = ctx.createOscillator();
-    const tremoloGain = ctx.createGain();
-    const volumeRampGain = ctx.createGain();
-    const pannerNode = ctx.createStereoPanner();
-    const lfoOscillator = ctx.createOscillator();
-    const pannerLFO = ctx.createOscillator();
-    const chorusOscillator1 = ctx.createOscillator();
-    const chorusOscillator2 = ctx.createOscillator();
-    const chorusGain1 = ctx.createGain();
-    const chorusGain2 = ctx.createGain();
+    const mainOscillator = offlineCtx.createOscillator();
+    const tremoloGain = offlineCtx.createGain();
+    const volumeRampGain = offlineCtx.createGain();
+    const pannerNode = offlineCtx.createStereoPanner();
+    const lfoOscillator = offlineCtx.createOscillator();
+    const pannerLFO = offlineCtx.createOscillator();
+    const chorusOscillator1 = offlineCtx.createOscillator();
+    const chorusOscillator2 = offlineCtx.createOscillator();
+    const chorusGain1 = offlineCtx.createGain();
+    const chorusGain2 = offlineCtx.createGain();
 
-    // --- Set types and initial values BEFORE starting oscillators to prevent defaults (e.g., 440hz) ---
     mainOscillator.type = 'sine';
     mainOscillator.frequency.value = 55;
-
     lfoOscillator.type = 'sine';
     lfoOscillator.frequency.value = 4;
-
     pannerLFO.type = 'sine';
     pannerLFO.frequency.value = 0.1;
-
     chorusOscillator1.type = chorusOscillator2.type = 'sine';
     chorusOscillator1.frequency.value = 55 * 0.5;
     chorusOscillator2.frequency.value = 55 * 0.5;
     
-    // Start gains at 0 to avoid any sound until the effect loop is explicitly started
     volumeRampGain.gain.value = 0;
     chorusGain1.gain.value = 0;
     chorusGain2.gain.value = 0;
+    tremoloGain.gain.value = 0.5;
 
-    // Connect nodes
-    mainOscillator.connect(tremoloGain).connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
-    lfoOscillator.connect(tremoloGain.gain);
+    mainOscillator.connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
+    lfoOscillator.connect(tremoloGain).connect(volumeRampGain.gain);
     pannerLFO.connect(pannerNode.pan);
     chorusOscillator1.connect(chorusGain1).connect(masterOutput);
     chorusOscillator2.connect(chorusGain2).connect(masterOutput);
+
+    const now = 0;
+    const endTime = now + LOOP_DURATION_S;
+
+    mainOscillator.frequency.setValueAtTime(55, now);
+    mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
+    volumeRampGain.gain.setValueAtTime(1.0, now);
+    volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
+    lfoOscillator.frequency.setValueAtTime(4, now);
+    lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
+    chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
+    chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
+    chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
+    chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
+    chorusGain1.gain.setValueAtTime(0.05, now);
+    chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
+    chorusGain2.gain.setValueAtTime(0.05, now);
+    chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
+
+    mainOscillator.start(now);
+    lfoOscillator.start(now);
+    pannerLFO.start(now);
+    chorusOscillator1.start(now);
+    chorusOscillator2.start(now);
     
-    // Start oscillators
-    mainOscillator.start(0);
-    lfoOscillator.start(0);
-    pannerLFO.start(0);
-    chorusOscillator1.start(0);
-    chorusOscillator2.start(0);
-
-    const scheduleCycle = () => {
-        if (!pulseState.isRunning) return;
-        const now = ctx.currentTime;
-        const endTime = now + LOOP_DURATION_S;
-
-        const params = [
-            mainOscillator.frequency, volumeRampGain.gain, lfoOscillator.frequency,
-            chorusOscillator1.frequency, chorusOscillator2.frequency,
-            chorusGain1.gain, chorusGain2.gain
-        ];
-        params.forEach(p => p.cancelScheduledValues(now));
-
-        mainOscillator.frequency.setValueAtTime(55, now);
-        volumeRampGain.gain.setValueAtTime(1.0, now);
-        lfoOscillator.frequency.setValueAtTime(4, now);
-        chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
-        chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
-        chorusGain1.gain.setValueAtTime(0.05, now);
-        chorusGain2.gain.setValueAtTime(0.05, now);
-
-        mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
-        volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
-        lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
-        chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
-        chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
-        chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
-        chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
-
-        pulseState.timeoutId = setTimeout(scheduleCycle, LOOP_DURATION_S * 1000);
-    };
-
-    const startLoop = () => {
-        if (pulseState.isRunning) return;
-        pulseState.isRunning = true;
-        scheduleCycle();
-    };
-
-    const stopLoop = () => {
-        pulseState.isRunning = false;
-        if (pulseState.timeoutId) {
-            clearTimeout(pulseState.timeoutId);
-            pulseState.timeoutId = null;
-        }
-        const now = ctx.currentTime;
-        const gains = [volumeRampGain.gain, chorusGain1.gain, chorusGain2.gain];
-        const params = [
-            mainOscillator.frequency, lfoOscillator.frequency,
-            chorusOscillator1.frequency, chorusOscillator2.frequency, ...gains
-        ];
-        params.forEach(p => p.cancelScheduledValues(now));
-        // Fade out gains to prevent clicks.
-        gains.forEach(g => g.linearRampToValueAtTime(0, now + 0.1));
-    };
+    const renderedBuffer = await offlineCtx.startRendering();
     
-    return { output: compressor, startLoop, stopLoop };
+    const source = ctx.createBufferSource();
+    source.buffer = renderedBuffer;
+    source.loop = true;
+    source.start();
+
+    return { output: source };
  },
 
- createAudioGraph(ctx) {
+ async createAudioGraph(ctx, initialStage) {
     const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0, ctx.currentTime);
     masterGain.connect(ctx.destination);
     
     const effectsGain = ctx.createGain();
@@ -1287,7 +1275,7 @@
     nodes.reverb = this.createReverb(ctx);
     nodes.reverb.connect(masterGain);
     
-    nodes.carrier = this.createCarrierPair(ctx);
+    nodes.carrier = this.createCarrierPair(ctx, initialStage);
     nodes.carrier.outputLeft.connect(masterGain);
     nodes.carrier.outputRight.connect(masterGain);
     nodes.carrier.outputLeft.connect(nodes.reverb);
@@ -1303,9 +1291,19 @@
         metalPulse: this.createMetalPulse
     };
     
-    this.toggleConfigs.forEach(({ stateKey, nodeKey }) => {
-        if (!creators[nodeKey]) return;
-        const node = creators[nodeKey].call(this, ctx);
+    for (const config of this.toggleConfigs) {
+        const { stateKey, nodeKey } = config;
+        if (!creators[nodeKey]) continue;
+
+        let node;
+        if (nodeKey === 'metalPulse') {
+            node = await creators[nodeKey].call(this, ctx);
+        } else if (nodeKey === 'iso' || nodeKey === 'deepSleep') {
+            node = creators[nodeKey].call(this, ctx, initialStage);
+        } else {
+            node = creators[nodeKey].call(this, ctx);
+        }
+        
         const gainSwitch = ctx.createGain();
         gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
         
@@ -1315,32 +1313,33 @@
         if(nodeKey !== 'deepSleep' && nodeKey !== 'metalPulse') gainSwitch.connect(nodes.reverb);
 
         nodes[nodeKey] = { ...node, gainSwitch, source: output };
-    });
+    }
     
     return nodes;
  },
 
- buildEngine() {
+ async buildEngine() {
     const ctx = this.createAudioContext();
-    const nodes = this.createAudioGraph(ctx);
+    const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+    const nodes = await this.createAudioGraph(ctx, initialStage);
     
     this.audio.ctx = ctx;
     this.audio.nodes = nodes;
     this.audio.masterGain = nodes.masterGain;
     this.audio.effectsGain = nodes.effectsGain;
     
-    this.audio.masterGain.gain.value = 0;
-    
     this.setStage(0, ctx.currentTime, 0.1);
  },
 
  async startEngine(isNew = false) {
     if (isNew || !this.audio.ctx || this.audio.ctx.state === 'closed') {
-        this.buildEngine();
+        await this.buildEngine();
     }
     
     try {
-        await this.audio.ctx.resume();
+        if (this.audio.ctx.state === 'suspended') {
+            await this.audio.ctx.resume();
+        }
     } catch(e) { console.error("Error resuming AudioContext:", e); }
 
     const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
@@ -1351,12 +1350,12 @@
     if (isNew) {
         this.state.sessionElapsedTime = 0;
     }
-    this.startAuto();
-
-    // Start loops for any effects that should be active
+    
+    // Start loops for any effects that are active by default for the preset
     if (this.state.isBowlEnabled && this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
     if (this.state.isDrumEnabled && this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
-    if (this.state.isMetalPulseEnabled && this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.startLoop();
+
+    this.startAuto();
 },
 
  setStage(idx, when, ramp = this.config.STAGE_CHANGE_RAMP_S) {
@@ -1373,7 +1372,7 @@
  }
  if (nodes.deepSleep) {
     const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
-    nodes.deepSleep.setBinaural(s.base, s.beat);
+    nodes.deepSleep.setBinaural(s.base, s.beat, when, ramp);
     nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
  }
  this.updateUIStage(idx);
@@ -1412,30 +1411,36 @@
  },
  
  async goToNextStage() {
-    if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
-        await this.startEngine(true);
-        return;
-    }
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+    try {
+        if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+            await this.startEngine(true);
+            return;
+        }
 
-    if (this.state.currentStage >= this.state.STAGES.length - 1) {
-        await this.stopEngine();
-        return;
-    }
+        if (this.state.currentStage >= this.state.STAGES.length - 1) {
+            await this.stopEngine();
+            return;
+        }
 
-    const nextStageIndex = this.state.currentStage + 1;
-    
-    const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
-    const stageDur = totalDur / this.state.STAGES.length;
-    this.state.sessionElapsedTime = nextStageIndex * stageDur;
-    
-    if(this.state.autoplayInterval) {
-        this.state.lastTickTime = performance.now();
-    }
-    
-    this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
+        const nextStageIndex = this.state.currentStage + 1;
+        
+        const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
+        const stageDur = totalDur / this.state.STAGES.length;
+        this.state.sessionElapsedTime = nextStageIndex * stageDur;
+        
+        if(this.state.autoplayInterval) {
+            this.state.lastTickTime = performance.now();
+        }
+        
+        this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
 
-    if (this.audio.ctx.state === 'suspended') {
-        await this.startEngine(false);
+        if (this.audio.ctx.state === 'suspended') {
+            await this.startEngine(false);
+        }
+    } finally {
+        this.state.isInteracting = false;
     }
  },
 
@@ -1444,7 +1449,6 @@
     this.stopAuto();
     if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
     if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
-    if (this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.stopLoop();
     this.state.sessionElapsedTime = 0;
 
     try {
@@ -1469,7 +1473,6 @@
  this.stopAuto();
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
  if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
- if (this.audio.nodes.metalPulse) this.audio.nodes.metalPulse.stopLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
  setTimeout(() => {
@@ -1530,13 +1533,19 @@
  
  // --- Event Handlers ---
  async handlePlayPause() {
-    if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
-        await this.startEngine(true);
-    } else if (this.audio.ctx.state === 'running') {
-        this.pauseEngine();
-        this.updatePlayPauseButton('play');
-    } else if (this.audio.ctx.state === 'suspended') {
-        await this.startEngine(false);
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+    try {
+        if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+            await this.startEngine(true);
+        } else if (this.audio.ctx.state === 'running') {
+            this.pauseEngine();
+            this.updatePlayPauseButton('play');
+        } else if (this.audio.ctx.state === 'suspended') {
+            await this.startEngine(false);
+        }
+    } finally {
+        this.state.isInteracting = false;
     }
  },
 
@@ -1559,8 +1568,8 @@
         const targetGain = this.state[stateKey] ? 1 : 0;
         node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
         
-        // Special handling for nodes with independent loops
-        if (node.startLoop && node.stopLoop) {
+        // Special handling for nodes with independent loops, only if engine is running
+        if (node.startLoop && node.stopLoop && this.audio.ctx.state === 'running') {
              if (this.state[stateKey]) {
                  node.startLoop();
              } else {
@@ -1571,18 +1580,24 @@
  },
 
  async handlePresetChange(e) {
- const presetName = e.target.value;
- const preset = this.PRESETS[presetName];
- if (!preset) return;
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+    try {
+        const presetName = e.target.value;
+        const preset = this.PRESETS[presetName];
+        if (!preset) return;
 
- this.state.STAGES = preset.stages;
- this.updatePresetUI(preset);
- 
- if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
-    await this.stopEngine();
-    await this.startEngine(true);
- }
- this.updateUIStage(-1);
+        this.state.STAGES = preset.stages;
+        this.updatePresetUI(preset);
+        
+        if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
+            await this.stopEngine();
+            await this.startEngine(true);
+        }
+        this.updateUIStage(-1);
+    } finally {
+        this.state.isInteracting = false;
+    }
  },
  
  handleSaveAudio() {
@@ -1597,7 +1612,8 @@
             const sampleRate = 44100;
 
             const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
-            const nodes = this.createAudioGraph(offlineCtx);
+            const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+            const nodes = await this.createAudioGraph(offlineCtx, initialStage);
 
             // --- Schedule all audio events for offline rendering ---
             
