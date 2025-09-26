@@ -1,0 +1,24 @@
+# Project Vision: The Single-File Manifesto
+
+## 1. Core Philosophy: Simplicity, Portability, Longevity
+
+This application is, and must always remain, a single, self-contained HTML file. This is not a limitation; it is our core design principle. The vision is to create a powerful, immersive experience that is maximally portable, requires no installation or build steps, and can be run offline by simply opening one file in a web browser.
+
+This approach ensures:
+*   **Ultimate Portability:** The entire application can be shared as a single file.
+*   **Zero Dependencies:** It runs without needing `npm install`, a web server, or a complex development environment.
+*   **Offline First:** The app is inherently functional without an internet connection.
+*   **Longevity:** Free from the churn of frameworks and build tools, this app is architected to work for decades to come.
+
+## 2. The Golden Rule: One File to Rule Them All
+
+All code—HTML, CSS, and JavaScript—must reside within the `index.html` file. The app is intended to be a standalone HTML page that can run from a single file without external dependencies or resources.
+
+## 3. What This App Is NOT
+
+To maintain clarity and focus, it's essential to define what we are not building:
+
+*   It is **NOT** a Single Page Application (SPA) in the modern framework sense.
+*   It is **NOT** a multi-page website.
+*   It does **NOT** have a backend or server-side component.
+*   It does **NOT** require a package manager or a build step.
