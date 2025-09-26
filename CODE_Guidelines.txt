@@ -1,0 +1,61 @@
+# Project Code Guidelines
+
+## 1. The Single File Rule
+
+All code—HTML, CSS, and JavaScript—**must** reside within the `index.html` file.
+
+*   **No External Files:** Do not create or link to external `.js` or `.css` files. All logic and styling must be embedded directly within `<script>` and `<style>` tags.
+*   **No Build Process:** The project must not require any form of compilation, transpilation, or bundling. The `index.tsx` file is strictly for development-time type checking and should never be referenced or deployed. The code in the final `index.html` must be pure, browser-runnable JavaScript.
+*   **Vanilla JavaScript is King:** The application logic should be written in modern, vanilla JavaScript (ES6+). Do not introduce any client-side frameworks (like React, Vue, Svelte, etc.) or large utility libraries (like jQuery or Lodash).
+
+## 2. HTML Guidelines
+
+*   **Structure:** Maintain a clean, semantic HTML structure. Use tags like `<header>`, `<main>`, `<footer>`, `<section>`, and `<button>` appropriately.
+*   **Accessibility (A11y):** Ensure the application is usable by everyone. Use ARIA attributes where necessary, ensure interactive elements are keyboard-navigable, and maintain good color contrast.
+
+## 3. CSS Guidelines
+
+*   **Styling Location:** All custom CSS rules must be placed within the `<style>` tag in the `<head>` of the `index.html` document.
+*   **Utility-First Approach:** The project should favor a utility-first CSS approach where possible to minimize custom CSS. However, this is not a strict requirement if another approach is better suited.
+*   **Custom Styles & Theming:** For styles that are not achievable with simple utilities or for defining the application's theme, use custom CSS rules in the `<style>` block. Use CSS variables (`:root`) for colors and core metrics to ensure consistency.
+
+## 4. JavaScript Guidelines
+
+*   **Logic Location:** All JavaScript code must be contained within a single `<script>` tag at the end of the `<body>` in `index.html`.
+*   **Code Organization:**
+    *   Keep the global scope clean. Group related functionality, such as constants, state variables, UI element selectors, audio-engine functions, and event listeners into a single application object (e.g., `app`).
+    *   Use clear, descriptive names for variables and functions.
+    *   Add comments to explain complex audio routing, mathematical calculations, or non-obvious logic.
+*   **State Management:** Application state should be managed within the main application object. Avoid complex state management patterns.
+*   **DOM Interaction:** Directly select and manipulate DOM elements using standard APIs like `document.getElementById()`.
+*   **Debounce UI Controls for Performance:** To prevent rapid, successive updates to the audio engine which can be computationally expensive and cause performance issues, all interactive UI controls that modify sound parameters (sliders, toggles) **must** have their event listeners debounced. A short delay (e.g., 50ms) is sufficient to prevent input "flooding" while maintaining a responsive feel for the user.
+
+## 5. Audio Engine Guidelines
+
+*   **Optimizing Looping Sounds with Audio Buffers:**
+    *   **Problem:** Procedurally generating complex, looping sounds in real-time (e.g., using multiple oscillators and modulators) is computationally expensive. This can lead to high CPU usage, audio stuttering, and poor performance, especially on mobile or older devices.
+    *   **Solution:** For any complex sound that loops, pre-render it into a static `AudioBuffer` once, rather than re-synthesizing it on every cycle.
+    *   **Implementation:** Use an `OfflineAudioContext` to render the complete loop of the procedural sound into an `AudioBuffer`. Once rendered, play this sound using an `AudioBufferSourceNode` with its `loop` property set to `true`. This approach significantly reduces CPU load, as the complex synthesis only happens once, and subsequent playback is a highly optimized, low-cost memory read operation.
+*   **Audio Node Lifecycle and Initialization:**
+    *   **Problem:** A race condition can occur if an audio source node (like an `OscillatorNode`) is started before its parameters are configured. `OscillatorNode` defaults to 440Hz, which can cause a brief, high-pitched "tinnitus" tone when the audio engine initializes or a preset changes, as it plays for a few milliseconds before its frequency is correctly set by the application logic.
+    *   **Solution:** All audio source nodes **must** have their essential parameters (especially `frequency` and `gain`) set to their correct initial values *before* the `.start()` method is called.
+    *   **Implementation:** For any function that creates an oscillator or other source node, set `.type`, `.frequency.value`, and `.gain.value` immediately after creation. It is a best practice to initialize gain nodes at `0` to prevent audible clicks, and then ramp them up as part of the effect's intended audio envelope or loop. This guarantees that no sound is ever produced at an incorrect, default frequency.
+*   **Preventing Audio Clipping with DynamicsCompressorNode:**
+    *   **Problem:** When mixing multiple procedural audio sources, especially those with significant low-frequency content, constructive interference can occur. This can lead to "runaway resonance" where volume spikes dramatically, causing harsh digital clipping and unpleasant, tinnitus-like artifacts.
+    *   **Solution:** To prevent this, each independent soundscape layer that is procedurally generated (like the 'Falling Metal Pulse') **must** be routed through its own `DynamicsCompressorNode` before being connected to the main effects bus or master gain.
+    *   **Implementation:** This node acts as an automatic limiter, taming volume peaks from a single effect layer and preventing it from overwhelming the final mix. Configure the compressor with a high `ratio` (e.g., 12:1 or higher), a low `threshold` (e.g., -24dB), and a fast `attack` (e.g., 0.003s) to effectively catch and reduce peaks, ensuring all layers combine cleanly.
+*   **Eliminating Audio Clicks with Micro-fades:**
+    *   **Problem:** Instantaneous changes to an `AudioParam` on a node that is currently producing sound (e.g., using `.setValueAtTime()` to re-loop an oscillator's frequency or gain) create a discontinuity in the audio waveform. The human ear perceives this as an audible "click" or "pop". This can happen when starting/stopping playback, changing presets, or at the seam of a procedural loop.
+    *   **Solution:** Never change a sounding parameter instantly. Instead, all parameter changes on active nodes **must** be scheduled as a very short, smooth ramp.
+    *   **Implementation:** Use `.linearRampToValueAtTime()` with a very short duration (e.g., 0.015 to 0.02 seconds) to transition between values. This creates a "micro-fade" that smooths the waveform transition, making it imperceptible to the ear and eliminating clicks. This principle applies to frequency, gain, filter cutoff, or any other parameter being audibly rendered.
+
+## 6. Security Considerations
+
+*   **Minimal Attack Surface:** This is a purely client-side application. It has no backend server, does not use a database, and does not accept or store user-generated content that is rendered to the page.
+*   **Not Vulnerable to Common Web Attacks:** Because of its architecture, this app is not vulnerable to standard web attacks such as:
+    *   **Cross-Site Scripting (XSS):** No user input is ever rendered as HTML.
+    *   **SQL Injection / NoSQL Injection:** No database is used.
+    *   **Cross-Site Request Forgery (CSRF):** There are no authenticated user sessions or server-side actions to forge.
+    *   **DDoS / Spamming:** There is no server to attack.
+    *   **Insecure Deserialization:** The app does not serialize or deserialize data from untrusted sources.
+*   **Primary Focus:** Security efforts should focus on ensuring that any future additions do not introduce vectors for self-XSS or other client-side vulnerabilities, and maintain the principle of not sending user data to any external service.
