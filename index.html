@@ -230,7 +230,7 @@
  margin-top: 0;
  margin-bottom: 0.5rem;
  }
- .info-panel p, .info-panel ol, .info-panel ul {
+ .info-panel p, .info-panel ol, .info-panel ul, .info-panel dl {
  font-size: 0.875rem;
  line-height: 1.625;
  margin: 0;
@@ -403,10 +403,10 @@
  }
  }
  
- @media (min-width: 64rem) { /* 1024px */
- .main-container {
- max-width: 60rem; /* Add a max-width for very large screens */
- }
+  @media (min-width: 64rem) { /* 1024px */
+   .main-container {
+     max-width: 60rem; /* Add a max-width for very large screens */
+   }
  }
  
  .play-icon {
@@ -493,8 +493,8 @@
  }
 
  #install-instructions ul svg {
- width: 1em;
- height: 1em;
+     width: 1em;
+     height: 1em;
  }
  </style>
 </head>
@@ -600,15 +600,71 @@
  </div>
  <span>Glymphatic Pulse</span>
  </button>
- <button id="metalPulseOption" role="switch" aria-checked="false" class="toggle-button">
- <div class="checkmark-container" id="metalPulseChkContainer">
- <div id="metalPulseChk" class="checkmark"></div>
+ <button id="brainPulseOption" role="switch" aria-checked="false" class="toggle-button">
+ <div class="checkmark-container" id="brainPulseChkContainer">
+ <div id="brainPulseChk" class="checkmark"></div>
  </div>
- <span>Falling Metal Pulse (15s, 55Hz to 20Hz)</span>
+ <span>Falling Brain Pulse (15s, 55Hz to 20Hz)</span>
  </button>
  </div>
  </div>
  
+ <div class="panel info-panel">
+    <h3>SoundScape Layer Effects Explained</h3>
+    <p>Each layer adds a unique texture to the soundscape, designed to influence your brain state in a specific way. Combine them to create your perfect session.</p>
+    <dl style="margin-top: 1rem; display: grid; gap: 1rem;">
+        <div>
+            <dt><strong>Isochronic Gating</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> This effect uses a single tone that is rapidly turned on and off in a precise, rhythmic pattern. Unlike binaural beats, headphones are not required to perceive the effect.
+                <br><strong>Intended Effect:</strong> The sharp contrast between sound and silence provides a very strong and effective stimulus for the brain, making it a potent form of brainwave entrainment for guiding the mind to target states like focus or relaxation.
+            </dd>
+        </div>
+        <div>
+            <dt><strong>Pink Noise</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> A sound spectrum with equal energy per octave, making it sound deeper and more balanced than white noise. It's common in natural sounds like waterfalls or steady rain.
+                <br><strong>Intended Effect:</strong> Masks jarring background noises to improve focus and create a stable auditory environment for sleep or meditation. The brain perceives it as a non-threatening, constant sound, reducing reactivity and promoting calmness.
+            </dd>
+        </div>
+        <div>
+            <dt><strong>3D Wind Effect</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> A synthesized wind sound created by filtering pink noise and modulating its volume and stereo position (panning left and right).
+                <br><strong>Intended Effect:</strong> Creates a dynamic, immersive sense of open space. This engages the brain's spatial hearing, which can reduce feelings of anxiety or confinement and promote a state of calm relaxation.
+            </dd>
+        </div>
+        <div>
+            <dt><strong>6 BPM Shamanic Drum</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> A deep, resonant drumbeat with a very slow, steady rhythm of 6 beats per minute (0.1 Hz). The tone is rich in low frequencies.
+                <br><strong>Intended Effect:</strong> This powerful, grounding rhythm is designed to guide the mind into a deep, trance-like meditative state. Its frequency falls within the deep Delta brainwave range, associated with profound relaxation and access to subconscious states (Theta waves).
+            </dd>
+        </div>
+        <div>
+            <dt><strong>Distant Singing Bowl</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> The sound of a Tibetan singing bowl, characterized by a fundamental tone and a rich spectrum of harmonic overtones. Reverb is used to create a sense of distance and space.
+                <br><strong>Intended Effect:</strong> The complex, resonant harmonics help to quiet internal mental chatter and promote mindfulness. The sound captures attention gently, guiding the brain toward a state of calm alertness associated with Alpha brainwaves (8-12 Hz).
+            </dd>
+        </div>
+        <div>
+            <dt><strong>Glymphatic Pulse</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> A very deep, slowly pulsing binaural beat that operates in the low Delta brainwave range (0.5-2 Hz), mimicking the slow-wave oscillations that occur during deep sleep.
+                <br><strong>Intended Effect:</strong> Aims to support the brain's natural deep sleep processes. This includes the glymphatic system, the brain's unique cleaning mechanism that is most active during deep, restorative sleep.
+            </dd>
+        </div>
+        <div>
+            <dt><strong>Falling Brain Pulse</strong></dt>
+            <dd style="font-size: 0.875rem; line-height: 1.625; margin-left:0;">
+                <strong>Method:</strong> A synthesized tone that slowly sweeps downwards in frequency over a 15-second cycle, moving from 55Hz down to 20Hz.
+                <br><strong>Intended Effect:</strong> Designed to guide the mind from a state of high-frequency activity (Gamma/high-Beta) down towards a more focused, less agitated state (mid-Beta). This auditory "downshifting" can help reduce mental clutter and ease into a state of relaxed concentration.
+            </dd>
+        </div>
+    </dl>
+ </div>
+
  <div class="info-cards">
  <div class="panel info-panel">
  <h3>How to use</h3>
@@ -703,24 +759,25 @@
 
 <script>
  const app = {
+ // --- DATA ---
  PRESETS: {
- none: { stages: [{name:'Grounding', base:55, beat:2.5, padCut:900, iso:2.0, noise:0.08}, {name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}, {name:'Focus', base:140, beat:10.0, padCut:1800, iso:3.0, noise:0.06}, {name:'Intuitive', base:160, beat:7.5, padCut:2500, iso:2.0, noise:0.045}, {name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.6 },
- focus: { stages: [{name:'Beta Wave', base:140, beat:18.0, padCut:1500, iso:10.0, noise:0.05}, {name:'Gamma Wave', base:200, beat:40.0, padCut:2500, iso:25.0, noise:0.0}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: false, metalPulse: false }, intensity: 0.8 },
- meditation: { stages: [{name:'Alpha Wave', base:90, beat:10.0, padCut:800, iso:5.0, noise:0.04}, {name:'Theta Wave', base:60, beat:6.0, padCut:500, iso:3.0, noise:0.02}, {name:'Deep Theta', base:40, beat:4.0, padCut:300, iso:1.5, noise:0.01}], toggles: { iso: true, noise: true, wind: false, drum: true, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.5 },
- relaxation: { stages: [{name:'Relax', base:120, beat:8.0, padCut:1000, iso:4.0, noise:0.03}, {name:'Deep Calm', base:80, beat:6.0, padCut:700, iso:2.0, noise:0.01}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.4 },
- deep_sleep: { stages: [{name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05}, {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08}, {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: true, metalPulse: false }, intensity: 0.3 },
+ none: { stages: [{name:'Grounding', base:55, beat:2.5, padCut:900, iso:2.0, noise:0.08}, {name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}, {name:'Focus', base:140, beat:10.0, padCut:1800, iso:3.0, noise:0.06}, {name:'Intuitive', base:160, beat:7.5, padCut:2500, iso:2.0, noise:0.045}, {name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: true, deepSleep: false, brainPulse: false }, intensity: 0.6 },
+ focus: { stages: [{name:'Beta Wave', base:140, beat:18.0, padCut:1500, iso:10.0, noise:0.05}, {name:'Gamma Wave', base:200, beat:40.0, padCut:2500, iso:25.0, noise:0.0}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: false, brainPulse: false }, intensity: 0.8 },
+ meditation: { stages: [{name:'Alpha Wave', base:90, beat:10.0, padCut:800, iso:5.0, noise:0.04}, {name:'Theta Wave', base:60, beat:6.0, padCut:500, iso:3.0, noise:0.02}, {name:'Deep Theta', base:40, beat:4.0, padCut:300, iso:1.5, noise:0.01}], toggles: { iso: true, noise: true, wind: false, drum: true, bowl: true, deepSleep: false, brainPulse: false }, intensity: 0.5 },
+ relaxation: { stages: [{name:'Relax', base:120, beat:8.0, padCut:1000, iso:4.0, noise:0.03}, {name:'Deep Calm', base:80, beat:6.0, padCut:700, iso:2.0, noise:0.01}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, brainPulse: false }, intensity: 0.4 },
+ deep_sleep: { stages: [{name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05}, {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08}, {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: true, brainPulse: false }, intensity: 0.3 },
  rem_sleep: {
- stages: [
- {name:'Alpha Relaxation', base:120, beat:10.0, padCut:900, iso:5.0, noise:0.03, deepSleepOn: false},
- {name:'Theta Transition', base:90, beat:6.0, padCut:600, iso:3.0, noise:0.04, deepSleepOn: true},
- {name:'Delta Deep Sleep', base:80, beat:2.0, padCut:300, iso:1.0, noise:0.05, deepSleepOn: true},
- {name:'REM Phase', base:100, beat:4.5, padCut:400, iso:2.5, noise:0.04, deepSleepOn: true}
- ],
- toggles: { iso: true, noise: true, wind: false, drum: false, bowl: true, deepSleep: true, metalPulse: false },
- intensity: 0.25
+    stages: [
+        {name:'Alpha Relaxation', base:120, beat:10.0, padCut:900, iso:5.0, noise:0.03, deepSleepOn: false},
+        {name:'Theta Transition', base:90, beat:6.0, padCut:600, iso:3.0, noise:0.04, deepSleepOn: true},
+        {name:'Delta Deep Sleep', base:80, beat:2.0, padCut:300, iso:1.0, noise:0.05, deepSleepOn: true},
+        {name:'REM Phase', base:100, beat:4.5, padCut:400, iso:2.5, noise:0.04, deepSleepOn: true}
+    ],
+    toggles: { iso: true, noise: true, wind: false, drum: false, bowl: true, deepSleep: true, brainPulse: false },
+    intensity: 0.25
  },
- energetic: { stages: [{name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: false, deepSleep: false, metalPulse: false }, intensity: 0.6 },
- bliss: { stages: [{name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.7 }
+ energetic: { stages: [{name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: false, deepSleep: false, brainPulse: false }, intensity: 0.6 },
+ bliss: { stages: [{name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, brainPulse: false }, intensity: 0.7 }
  },
 
  config: {
@@ -743,9 +800,10 @@
  { stateKey: 'isDrumEnabled', optionId: 'drumOption', chkId: 'drumChk', nodeKey: 'drum' },
  { stateKey: 'isBowlEnabled', optionId: 'bowlOption', chkId: 'bowlChk', nodeKey: 'bowl' },
  { stateKey: 'isDeepSleepEnabled', optionId: 'deepSleepOption', chkId: 'deepSleepChk', nodeKey: 'deepSleep' },
- { stateKey: 'isMetalPulseEnabled', optionId: 'metalPulseOption', chkId: 'metalPulseChk', nodeKey: 'metalPulse' },
+ { stateKey: 'isBrainPulseEnabled', optionId: 'brainPulseOption', chkId: 'brainPulseChk', nodeKey: 'brainPulse' },
  ],
 
+ // --- STATE ---
  state: {
  STAGES: [],
  currentStage: -1,
@@ -758,28 +816,22 @@
  isDrumEnabled: true,
  isBowlEnabled: true,
  isDeepSleepEnabled: false,
- isMetalPulseEnabled: false,
+ isBrainPulseEnabled: false,
  isInteracting: false,
- },
-
- audio: {
- ctx: null,
- masterGain: null,
- effectsGain: null,
- nodes: {},
+ isPlaying: false,
  },
 
  ui: {},
 
- // --- Core Methods ---
+ // --- CORE "CONTROLLER" METHODS ---
  debounce(func, delay) {
- let timeoutId;
- return function(...args) {
- clearTimeout(timeoutId);
- timeoutId = setTimeout(() => {
- func.apply(this, args);
- }, delay);
- };
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
  },
  
  init() {
@@ -814,748 +866,64 @@
  this.ui.nextStageBtn.addEventListener('click', this.goToNextStage.bind(this));
  this.ui.saveAudioBtn.addEventListener('click', this.handleSaveAudio.bind(this));
  this.ui.lengthSlider.addEventListener('input', this.debounce(e => this.ui.lenLabel.textContent = e.target.value, 50));
- this.ui.intensitySlider.addEventListener('input', this.debounce(this.handleIntensityChange.bind(this), 50));
+ this.ui.intensitySlider.addEventListener('input', this.debounce((e) => this.handleIntensityChange(e.target.value), 50));
  this.ui.presetSelector.addEventListener('change', this.debounce(this.handlePresetChange.bind(this), 100));
  
  this.toggleConfigs.forEach(config => {
- this.ui[config.optionId].addEventListener('click', this.debounce(() => {
- this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
- }, 50));
+    this.ui[config.optionId].addEventListener('click', this.debounce(() => {
+        this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
+    }, 50));
  });
  
  this.initUIState();
  this.setupMediaSessionHandlers();
  },
 
- // --- Media Session API ---
+ // --- Media Session API & PWA ---
  setupMediaSessionHandlers() {
- if (!('mediaSession' in navigator)) {
- return;
- }
-
- navigator.mediaSession.setActionHandler('play', this.handlePlayPause.bind(this));
- navigator.mediaSession.setActionHandler('pause', this.handlePlayPause.bind(this));
- navigator.mediaSession.setActionHandler('nexttrack', this.goToNextStage.bind(this));
- navigator.mediaSession.setActionHandler('previoustrack', this.goToPreviousStage.bind(this));
+    if (!('mediaSession' in navigator)) return;
+    navigator.mediaSession.setActionHandler('play', this.handlePlayPause.bind(this));
+    navigator.mediaSession.setActionHandler('pause', this.handlePlayPause.bind(this));
+    navigator.mediaSession.setActionHandler('nexttrack', this.goToNextStage.bind(this));
+    navigator.mediaSession.setActionHandler('previoustrack', this.goToPreviousStage.bind(this));
  },
 
  updateMediaSessionMetadata(idx) {
- if (!('mediaSession' in navigator)) {
- return;
- }
+    if (!('mediaSession' in navigator)) return;
+    if (idx < 0 || this.state.STAGES.length === 0) {
+        navigator.mediaSession.metadata = null;
+        return;
+    }
+    
+    const stage = this.state.STAGES[idx];
+    const presetSelector = this.ui.presetSelector;
+    const presetName = presetSelector.options[presetSelector.selectedIndex].text;
+    
+    const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496"><circle cx="252.1" cy="246.6" r="241.2" fill="#a2008a"/><ellipse cx="176.3" cy="177" fill="#ebff3f" rx="70.6" ry="66.9"/><path fill="#ebff3f" d="M302 183h97v37h-97z"/><path fill="#ebff3f" stroke="#ebff3f" stroke-width="25.9" d="M111 308c72 90 167 115 252 69"/></svg>`;
+    const iconUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`;
 
- if (idx < 0 || this.state.STAGES.length === 0) {
- navigator.mediaSession.metadata = null;
- return;
- }
- 
- const stage = this.state.STAGES[idx];
- const presetSelector = this.ui.presetSelector;
- const presetName = presetSelector.options[presetSelector.selectedIndex].text;
- 
- const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496"><circle cx="252.1" cy="246.6" r="241.2" fill="#a2008a"/><ellipse cx="176.3" cy="177" fill="#ebff3f" rx="70.6" ry="66.9"/><path fill="#ebff3f" d="M302 183h97v37h-97z"/><path fill="#ebff3f" stroke="#ebff3f" stroke-width="25.9" d="M111 308c72 90 167 115 252 69"/></svg>`;
- const iconUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`;
-
- navigator.mediaSession.metadata = new MediaMetadata({
- title: stage.name,
- artist: this.config.APP_NAME,
- album: `Preset: ${presetName}`,
- artwork: [
- { src: iconUrl, sizes: '496x496', type: 'image/svg+xml' }
- ]
- });
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: stage.name,
+        artist: this.config.APP_NAME,
+        album: `Preset: ${presetName}`,
+        artwork: [ { src: iconUrl, sizes: '496x496', type: 'image/svg+xml' } ]
+    });
  },
  
- // --- PWA & Environment ---
  checkPWA() {
- if (window.location.protocol === 'file:') {
- this.ui.installAppBtn.style.display = 'none';
- const p = document.createElement('p');
- p.innerHTML = '<strong>Note:</strong> App installation is not available when running from a local file. Please use a web server (http or https).';
- p.style.color = 'var(--accent)';
- this.ui.installInstructions.prepend(p);
- }
- 
- if (window.matchMedia('(display-mode: standalone)').matches) {
- this.ui.installAppBtn.style.display = 'none';
- this.ui.installInstructions.style.display = 'none';
- }
+    if (window.location.protocol === 'file:') {
+        this.ui.installAppBtn.style.display = 'none';
+        const p = document.createElement('p');
+        p.innerHTML = '<strong>Note:</strong> App installation is not available when running from a local file. Please use a web server (http or https).';
+        p.style.color = 'var(--accent)';
+        this.ui.installInstructions.prepend(p);
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+         this.ui.installAppBtn.style.display = 'none';
+         this.ui.installInstructions.style.display = 'none';
+    }
  },
 
- // --- Audio Engine ---
- createAudioContext() {
- if (this.audio.ctx) {
- try { this.audio.ctx.close(); } catch(e) {}
- }
- this.audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
- return this.audio.ctx;
- },
-
- // Generates a simple algorithmic reverb impulse response from decaying white noise.
- createReverb(ctx, duration = 3, decay = 2.0) {
- const rate = ctx.sampleRate, len = Math.floor(duration * rate), buf = ctx.createBuffer(2, len, rate);
- for(let ch = 0; ch < 2; ch++) {
- const d = buf.getChannelData(ch);
- for(let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - (i / rate) / duration, decay);
- }
- const conv = ctx.createConvolver();
- conv.buffer = buf;
- return conv;
- },
- 
- createCarrierPair(ctx, initialStage) {
- const left = ctx.createOscillator(), right = ctx.createOscillator();
- left.type = right.type = 'sine';
-
- const initialBase = initialStage.base;
- const initialBeat = initialStage.beat;
- left.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
- right.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
- 
- left.start(); right.start();
- 
- const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.06;
- const lfoG = ctx.createGain(); lfoG.gain.value = 1.6;
- lfo.connect(lfoG); lfoG.connect(left.frequency); lfoG.connect(right.frequency); lfo.start();
-
- const panL = ctx.createStereoPanner(); panL.pan.value = -0.6;
- const panR = ctx.createStereoPanner(); panR.pan.value = 0.6;
-
- const gL = ctx.createGain(), gR = ctx.createGain(); gL.gain.value = gR.gain.value = 0.45;
-
- left.connect(panL); right.connect(panR); panL.connect(gL); panR.connect(gR);
-
- return {
- leftOsc: left, rightOsc: right, outputLeft: gL, outputRight: gR,
- setBinaural: (base, beat, when = ctx.currentTime, ramp = this.config.STAGE_CHANGE_RAMP_S) => {
- left.frequency.linearRampToValueAtTime(Math.max(8, base - beat / 2), when + ramp);
- right.frequency.linearRampToValueAtTime(Math.max(8, base + beat / 2), when + ramp);
- }
- };
- },
-
- createPadLayer(ctx) {
- const master = ctx.createGain(); master.gain.value = 0.0;
- const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7;
- master.connect(filter);
-
- const out = ctx.createGain(); out.gain.value = this.config.PAD_GAIN_MULTIPLIER; filter.connect(out);
- const base = 110;
- for(let i = 0; i < 3; i++) {
- const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = base * (1 + (i-1)*0.02);
- const lfo = ctx.createOscillator(); lfo.frequency.value = 0.02 + Math.random()*0.04;
- const lg = ctx.createGain(); lg.gain.value = 0.5 + Math.random()*0.6;
- lfo.connect(lg); lg.connect(osc.frequency); lfo.start(); osc.start(); osc.connect(master);
- }
-
- const ampLFO = ctx.createOscillator(); ampLFO.frequency.value = 0.03;
- const ampG = ctx.createGain(); ampG.gain.value = 0.25;
- ampLFO.connect(ampG); ampG.connect(master.gain); ampLFO.start();
- return { output: out, filter, setFilter: (cut, when=ctx.currentTime, ramp=this.config.STAGE_CHANGE_RAMP_S) => filter.frequency.linearRampToValueAtTime(cut, when + ramp) };
- },
-
- // Creates pink noise using the Voss-McCartney algorithm to filter white noise.
- createPinkNoise(ctx) {
- const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), data = buffer.getChannelData(0);
- let b0 = 0, b1 = 0;
- for(let i = 0; i < data.length; i++) {
- const white = Math.random() * 2 - 1;
- b0 = 0.99765 * b0 + white * 0.0990460; b1 = 0.96300 * b1 + white * 0.2965164;
- data[i] = (b0 + b1 + white * 0.1848) * 0.25;
- }
- const src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
- const g = ctx.createGain(); src.connect(g); src.start(); return g;
- },
-
- createIsoLayer(ctx, initialStage) {
- const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 80;
- const outG = ctx.createGain();
- const gate = ctx.createOscillator(); gate.type = 'sine'; gate.frequency.setValueAtTime(initialStage.iso, ctx.currentTime);
- const gateG = ctx.createGain(); gateG.gain.value = 0.6;
- gate.connect(gateG); gateG.connect(outG.gain);
- osc.connect(outG); osc.start(); gate.start();
- return { output: outG, gainNode: outG, gate, setRate: (hz, when=ctx.currentTime, ramp=2) => gate.frequency.linearRampToValueAtTime(hz, when + ramp) };
- },
-
- createWindSound(ctx) {
- const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), output = buffer.getChannelData(0);
- for (let i = 0; i < output.length; i++) output[i] = Math.random() * 2 - 1;
- const source = ctx.createBufferSource(); source.buffer = buffer; source.loop = true;
- const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 400; filter.Q.value = 0.5;
- const gainLFO = ctx.createOscillator(); gainLFO.type = 'sine'; gainLFO.frequency.value = 0.08;
- const gainMod = ctx.createGain(); gainMod.gain.value = 0.3; gainLFO.connect(gainMod);
- const mainGain = ctx.createGain(); mainGain.gain.value = 0.15;
- const panner = ctx.createStereoPanner(); panner.pan.value = 0;
- const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.05;
- const panMod = ctx.createGain(); panMod.gain.value = 0.8; panLFO.connect(panMod); panMod.connect(panner.pan);
- source.connect(filter); filter.connect(mainGain); gainMod.connect(mainGain.gain); mainGain.connect(panner);
- source.start(); gainLFO.start(); panLFO.start();
- return { output: panner, gainNode: mainGain };
- },
- 
- createDrumWave(ctx) {
- const numHarmonics = 32;
- const real = new Float32Array(numHarmonics);
- const imag = new Float32Array(numHarmonics);
- real[0] = 0;
- imag[0] = 0;
- for (let i = 1; i < numHarmonics; ++i) {
- if (i % 2 !== 0) { // Odd harmonics for a square-like wave
- real[i] = ((-1) ** ((i - 1) / 2)) * (1 / (i * i));
- } else {
- real[i] = 0;
- }
- imag[i] = 0;
- }
- return ctx.createPeriodicWave(real, imag, { disableNormalization: true });
- },
-
- createShamanicDrum(ctx) {
- const mainGain = ctx.createGain();
- mainGain.gain.value = 0.7;
-
- const drumState = {
- timeoutId: null,
- nextBeatTime1: 0.0,
- nextBeatTime2: 0.0,
- customWave: this.createDrumWave(ctx),
- drumFreq1: 40,
- drumFreq2: 55,
- patternPeriod: 10.0, // 6 BPM (60s / 10s)
- };
-
- const scheduleBeat = (frequency, time, decay, gain) => {
- if (ctx.state !== 'running') return;
- 
- const osc = ctx.createOscillator();
- osc.setPeriodicWave(drumState.customWave);
- 
- const freqVariation = (Math.random() - 0.5) * 2;
- osc.frequency.value = frequency + freqVariation;
- 
- const oscGain = ctx.createGain();
- const lowpass = ctx.createBiquadFilter();
- lowpass.type = 'lowpass';
- lowpass.frequency.setValueAtTime(350, time);
- lowpass.Q.value = 0.2;
-
- const panner = ctx.createStereoPanner();
- 
- osc.connect(oscGain);
- oscGain.connect(lowpass);
- lowpass.connect(panner);
- panner.connect(mainGain);
-
- const gainVariation = (Math.random() - 0.5) * 0.2;
- const finalGain = gain + gainVariation;
- 
- oscGain.gain.setValueAtTime(0, time);
- oscGain.gain.linearRampToValueAtTime(finalGain, time + 0.01);
- oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
- 
- const panDuration = 25.0;
- const panTarget = (Math.random() - 0.5) * 1.8;
- panner.pan.setValueAtTime(0, time);
- panner.pan.linearRampToValueAtTime(panTarget, time + panDuration);
-
- osc.start(time);
- osc.stop(time + decay + 0.1);
- };
-
- const scheduler = () => {
- if (drumState.timeoutId === null) return;
-
- const now = ctx.currentTime;
- const lookahead = 0.1;
-
- if (drumState.nextBeatTime1 < now + lookahead) {
- scheduleBeat(drumState.drumFreq1, drumState.nextBeatTime1, 12.0, 0.65);
- drumState.nextBeatTime1 += drumState.patternPeriod;
- }
-
- if (drumState.nextBeatTime2 < now + lookahead) {
- scheduleBeat(drumState.drumFreq2, drumState.nextBeatTime2, 4.0, 0.45);
- drumState.nextBeatTime2 += drumState.patternPeriod;
- }
- 
- drumState.timeoutId = setTimeout(scheduler, 25);
- };
-
- const startLoop = () => {
- if (drumState.timeoutId !== null) return;
- drumState.nextBeatTime1 = ctx.currentTime;
- drumState.nextBeatTime2 = ctx.currentTime;
- drumState.timeoutId = setTimeout(scheduler, 0);
- };
- 
- const stopLoop = () => {
- if (drumState.timeoutId !== null) {
- clearTimeout(drumState.timeoutId);
- drumState.timeoutId = null;
- }
- };
- 
- return { output: mainGain, gainNode: mainGain, startLoop, stopLoop };
- },
-
- createSingingBowl(ctx) {
- const baseFreq = 90;
- const partials = [
- { freq: baseFreq * 1, gain: 1.0 },
- { freq: baseFreq * 2.005, gain: 0.7 },
- { freq: baseFreq * 3.42, gain: 0.55 },
- { freq: baseFreq * 4.0, gain: 0.25 },
- { freq: baseFreq * 5.71, gain: 0.35 }
- ];
-
- const mainGain = ctx.createGain();
- mainGain.gain.value = 0.35; // It's a background effect.
-
- const panner = ctx.createStereoPanner();
- mainGain.connect(panner);
-
- const panLFO = ctx.createOscillator();
- panLFO.type = 'sine';
- panLFO.frequency.value = 0.025; // Slow pan
- const panMod = ctx.createGain();
- panMod.gain.value = 0.9; // Wide pan
- panLFO.connect(panMod);
- panMod.connect(panner.pan);
- panLFO.start();
-
- const envelope = ctx.createGain();
- envelope.gain.value = 0.0;
- envelope.connect(mainGain);
-
- partials.forEach(p => {
- const osc = ctx.createOscillator();
- osc.type = 'sine';
- osc.frequency.value = p.freq;
-
- const vibLFO = ctx.createOscillator();
- vibLFO.type = 'sine';
- vibLFO.frequency.value = 2.5 + Math.random() * 2;
- const vibDepth = ctx.createGain();
- vibDepth.gain.value = p.freq * 0.004;
- vibLFO.connect(vibDepth);
- vibDepth.connect(osc.frequency);
- 
- const partialGain = ctx.createGain();
- partialGain.gain.value = p.gain;
- 
- osc.connect(partialGain);
- partialGain.connect(envelope);
- 
- osc.start();
- vibLFO.start();
- });
-
- let intervalId = null;
- const trigger = (time) => {
- try {
- envelope.gain.cancelScheduledValues(time);
- envelope.gain.setValueAtTime(0, time);
- envelope.gain.linearRampToValueAtTime(1.0, time + 0.2); // Softer attack
- envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, time + 45); // 45s decay
- } catch(e) {
- console.error("Error scheduling singing bowl:", e);
- }
- };
- 
- const startLoop = () => {
- if (intervalId) clearInterval(intervalId);
- // Trigger immediately on play, then every 60s
- trigger(ctx.currentTime);
- intervalId = setInterval(() => {
- if (ctx.state === 'running') {
- trigger(ctx.currentTime);
- }
- }, 60000);
- };
-
- const stopLoop = () => {
- if (intervalId) clearInterval(intervalId);
- intervalId = null;
- envelope.gain.cancelScheduledValues(ctx.currentTime);
- envelope.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
- };
-
- return { output: panner, gainNode: mainGain, trigger, startLoop, stopLoop, envelope };
- },
-
- createDeepSleepBinaural(ctx, initialStage) {
- const leftOsc = ctx.createOscillator(), rightOsc = ctx.createOscillator();
- leftOsc.type = rightOsc.type = 'sine';
- const initialBase = initialStage.base;
- const initialBeat = initialStage.beat;
- leftOsc.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
- rightOsc.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
- leftOsc.start(); rightOsc.start();
- 
- const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
- const masterGain = ctx.createGain(); masterGain.gain.value = this.config.DEEP_SLEEP_GAIN_MULTIPLIER;
- const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
- volumeLFO.connect(volGainMod); volGainMod.connect(masterGain.gain);
- const leftPanner = ctx.createStereoPanner(), rightPanner = ctx.createStereoPanner();
- const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.015; panLFO.start();
-
- const panMod = ctx.createGain();
- panMod.gain.value = 1.0;
- const panInverter = ctx.createGain();
- panInverter.gain.value = -1;
- 
- panLFO.connect(panMod);
- panMod.connect(leftPanner.pan);
- panMod.connect(panInverter);
- panInverter.connect(rightPanner.pan);
- 
- leftOsc.connect(leftPanner); rightOsc.connect(rightPanner);
- const merger = ctx.createChannelMerger(2);
- leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1);
- merger.connect(masterGain);
- return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat, when = ctx.currentTime, ramp = this.config.STAGE_CHANGE_RAMP_S) => {
- const newLeftFreq = Math.max(8, base - beat / 2);
- const newRightFreq = Math.max(8, base + beat / 2);
- leftOsc.frequency.linearRampToValueAtTime(newLeftFreq, when + ramp);
- rightOsc.frequency.linearRampToValueAtTime(newRightFreq, when + ramp);
- }
- };
- },
- 
- async createMetalPulse(ctx) {
- const LOOP_DURATION_S = 15;
- const sampleRate = ctx.sampleRate;
- const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * sampleRate), sampleRate);
- 
- const masterOutput = offlineCtx.createGain();
- const compressor = offlineCtx.createDynamicsCompressor();
- compressor.threshold.setValueAtTime(-24, 0);
- compressor.knee.setValueAtTime(30, 0);
- compressor.ratio.setValueAtTime(12, 0);
- compressor.attack.setValueAtTime(0.003, 0);
- compressor.release.setValueAtTime(0.25, 0);
- masterOutput.connect(compressor);
- compressor.connect(offlineCtx.destination);
-
- const mainOscillator = offlineCtx.createOscillator();
- const tremoloGain = offlineCtx.createGain();
- const volumeRampGain = offlineCtx.createGain();
- const pannerNode = offlineCtx.createStereoPanner();
- const lfoOscillator = offlineCtx.createOscillator();
- const pannerLFO = offlineCtx.createOscillator();
- const chorusOscillator1 = offlineCtx.createOscillator();
- const chorusOscillator2 = offlineCtx.createOscillator();
- const chorusGain1 = offlineCtx.createGain();
- const chorusGain2 = offlineCtx.createGain();
-
- mainOscillator.type = 'sine';
- mainOscillator.frequency.value = 55;
- lfoOscillator.type = 'sine';
- lfoOscillator.frequency.value = 4;
- pannerLFO.type = 'sine';
- pannerLFO.frequency.value = 0.1;
- chorusOscillator1.type = chorusOscillator2.type = 'sine';
- chorusOscillator1.frequency.value = 55 * 0.5;
- chorusOscillator2.frequency.value = 55 * 0.5;
- 
- volumeRampGain.gain.value = 0;
- chorusGain1.gain.value = 0;
- chorusGain2.gain.value = 0;
- tremoloGain.gain.value = 0.5;
-
- mainOscillator.connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
- lfoOscillator.connect(tremoloGain).connect(volumeRampGain.gain);
- pannerLFO.connect(pannerNode.pan);
- chorusOscillator1.connect(chorusGain1).connect(masterOutput);
- chorusOscillator2.connect(chorusGain2).connect(masterOutput);
-
- const now = 0;
- const endTime = now + LOOP_DURATION_S;
-
- mainOscillator.frequency.setValueAtTime(55, now);
- mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
- volumeRampGain.gain.setValueAtTime(1.0, now);
- volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
- lfoOscillator.frequency.setValueAtTime(4, now);
- lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
- chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
- chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
- chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
- chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
- chorusGain1.gain.setValueAtTime(0.05, now);
- chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
- chorusGain2.gain.setValueAtTime(0.05, now);
- chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
-
- mainOscillator.start(now);
- lfoOscillator.start(now);
- pannerLFO.start(now);
- chorusOscillator1.start(now);
- chorusOscillator2.start(now);
- 
- const renderedBuffer = await offlineCtx.startRendering();
- 
- const source = ctx.createBufferSource();
- source.buffer = renderedBuffer;
- source.loop = true;
- source.start();
-
- return { output: source };
- },
-
- async createAudioGraph(ctx, initialStage) {
- const masterGain = ctx.createGain();
- masterGain.gain.setValueAtTime(0, ctx.currentTime);
- masterGain.connect(ctx.destination);
- 
- const effectsGain = ctx.createGain();
- effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
- effectsGain.connect(masterGain);
- 
- const nodes = { masterGain, effectsGain };
-
- nodes.reverb = this.createReverb(ctx);
- nodes.reverb.connect(masterGain);
- 
- nodes.carrier = this.createCarrierPair(ctx, initialStage);
- nodes.carrier.outputLeft.connect(masterGain);
- nodes.carrier.outputRight.connect(masterGain);
- nodes.carrier.outputLeft.connect(nodes.reverb);
- nodes.carrier.outputRight.connect(nodes.reverb);
- 
- nodes.pad = this.createPadLayer(ctx);
- nodes.pad.output.connect(masterGain);
- nodes.pad.output.connect(nodes.reverb);
-
- const creators = {
- iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
- drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural,
- metalPulse: this.createMetalPulse
- };
- 
- for (const config of this.toggleConfigs) {
- const { stateKey, nodeKey } = config;
- if (!creators[nodeKey]) continue;
-
- let node;
- if (nodeKey === 'metalPulse') {
- node = await creators[nodeKey].call(this, ctx);
- } else if (nodeKey === 'iso' || nodeKey === 'deepSleep') {
- node = creators[nodeKey].call(this, ctx, initialStage);
- } else {
- node = creators[nodeKey].call(this, ctx);
- }
- 
- const gainSwitch = ctx.createGain();
- gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
- 
- const output = node.output || node;
- output.connect(gainSwitch);
- gainSwitch.connect(effectsGain);
- if(nodeKey !== 'deepSleep' && nodeKey !== 'metalPulse') gainSwitch.connect(nodes.reverb);
-
- nodes[nodeKey] = { ...node, gainSwitch, source: output };
- }
- 
- return nodes;
- },
-
- async buildEngine() {
- const ctx = this.createAudioContext();
- const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
- const nodes = await this.createAudioGraph(ctx, initialStage);
- 
- this.audio.ctx = ctx;
- this.audio.nodes = nodes;
- this.audio.masterGain = nodes.masterGain;
- this.audio.effectsGain = nodes.effectsGain;
- 
- this.setStage(0, ctx.currentTime, 0.1);
- },
-
- async startEngine(isNew = false) {
- if (isNew || !this.audio.ctx || this.audio.ctx.state === 'closed') {
- await this.buildEngine();
- }
- 
- try {
- if (this.audio.ctx.state === 'suspended') {
- await this.audio.ctx.resume();
- }
- } catch(e) { console.error("Error resuming AudioContext:", e); }
-
- const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
- this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
- this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
- 
- this.updatePlayPauseButton('pause');
- if (isNew) {
- this.state.sessionElapsedTime = 0;
- this.updateMediaSessionMetadata(0);
- }
- if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
- 
- // Start loops for any effects that are active by default for the preset
- if (this.state.isBowlEnabled && this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
- if (this.state.isDrumEnabled && this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
-
- this.startAuto();
-},
-
- setStage(idx, when, ramp = this.config.STAGE_CHANGE_RAMP_S) {
- if (!this.audio.ctx || !this.audio.nodes.carrier) return;
- this.state.currentStage = idx;
- const s = this.state.STAGES[idx];
- const nodes = this.audio.nodes;
- 
- nodes.carrier.setBinaural(s.base, s.beat, when, ramp);
- nodes.pad.setFilter(s.padCut, when, ramp);
- if (nodes.iso) nodes.iso.setRate(s.iso, when, ramp);
- if (nodes.noise) {
- nodes.noise.source.gain.linearRampToValueAtTime(s.noise, when + ramp);
- }
- if (nodes.deepSleep) {
- const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
- nodes.deepSleep.setBinaural(s.base, s.beat, when, ramp);
- nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
- }
- this.updateUIStage(idx);
- this.updateMediaSessionMetadata(idx);
- },
-
- startAuto() {
- this.stopAuto();
- this.state.lastTickTime = performance.now();
- this.state.autoplayInterval = setInterval(this.tickAutoplay.bind(this), this.config.AUTOPLAY_TICK_MS);
- },
-
- stopAuto() {
- clearInterval(this.state.autoplayInterval);
- this.state.autoplayInterval = null;
- },
-
- tickAutoplay() {
- const now = performance.now();
- const delta = (now - this.state.lastTickTime) / 1000;
- this.state.lastTickTime = now;
- this.state.sessionElapsedTime += delta;
- 
- const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
- if (this.state.sessionElapsedTime >= totalDur) {
- this.stopEngine();
- return;
- }
- 
- const stageDur = totalDur / this.state.STAGES.length;
- const expectedStage = Math.floor(this.state.sessionElapsedTime / stageDur);
-
- if (expectedStage < this.state.STAGES.length && expectedStage !== this.state.currentStage) {
- const ramp = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
- this.setStage(expectedStage, this.audio.ctx.currentTime, ramp);
- }
- },
- 
- async goToNextStage() {
- if (this.state.isInteracting) return;
- this.state.isInteracting = true;
- try {
- if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
- await this.startEngine(true);
- return;
- }
-
- if (this.state.currentStage >= this.state.STAGES.length - 1) {
- await this.stopEngine();
- return;
- }
-
- const nextStageIndex = this.state.currentStage + 1;
- 
- const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
- const stageDur = totalDur / this.state.STAGES.length;
- this.state.sessionElapsedTime = nextStageIndex * stageDur;
- 
- if(this.state.autoplayInterval) {
- this.state.lastTickTime = performance.now();
- }
- 
- this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
-
- if (this.audio.ctx.state === 'suspended') {
- await this.startEngine(false);
- }
- } finally {
- this.state.isInteracting = false;
- }
- },
-
- async goToPreviousStage() {
- if (this.state.isInteracting) return;
- this.state.isInteracting = true;
- try {
- if (!this.audio.ctx || this.audio.ctx.state === 'closed' || this.state.currentStage <= 0) {
- return; // Cannot go back if not playing or at the first stage
- }
-
- const prevStageIndex = this.state.currentStage - 1;
- 
- const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
- const stageDur = totalDur / this.state.STAGES.length;
- this.state.sessionElapsedTime = prevStageIndex * stageDur;
- 
- if(this.state.autoplayInterval) {
- this.state.lastTickTime = performance.now();
- }
- 
- this.setStage(prevStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
-
- if (this.audio.ctx.state === 'suspended') {
- await this.startEngine(false);
- }
- } finally {
- this.state.isInteracting = false;
- }
- },
-
- async stopEngine() {
- if (!this.audio.ctx) return;
- this.stopAuto();
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
- this.state.sessionElapsedTime = 0;
-
- try {
- this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
- this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.FADE_DURATION_S);
- } catch(e) { console.error("Error stopping gain ramp:", e); }
-
- return new Promise(resolve => {
- setTimeout(() => {
- try { if (this.audio.ctx && this.audio.ctx.state !== 'closed') this.audio.ctx.suspend(); }
- catch(e) { console.error("Error suspending audio context:", e); }
- this.state.currentStage = -1;
- this.updatePlayPauseButton('play');
- this.updateUIStage(-1);
- this.updateMediaSessionMetadata(-1);
- if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
- resolve();
- }, this.config.FADE_DURATION_S * 1000);
- });
- },
-
- pauseEngine() {
- if (!this.audio.ctx || this.audio.ctx.state !== 'running') return;
- this.stopAuto();
- if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
- if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
- if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
- this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
- this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
- setTimeout(() => {
- if (this.audio.ctx && this.audio.ctx.state === 'running') this.audio.ctx.suspend();
- }, this.config.PAUSE_FADE_DURATION_S * 1000);
- },
- 
  // --- UI Update Functions ---
  updateUIStage(idx) {
  if (idx < 0) {
@@ -1594,13 +962,9 @@
 
  updatePresetUI(preset) {
  const toggles = preset.toggles;
- this.state.isIsoEnabled = !!toggles.iso;
- this.state.isNoiseEnabled = !!toggles.noise;
- this.state.isWindEnabled = !!toggles.wind;
- this.state.isDrumEnabled = !!toggles.drum;
- this.state.isBowlEnabled = !!toggles.bowl;
- this.state.isDeepSleepEnabled = !!toggles.deepSleep;
- this.state.isMetalPulseEnabled = !!toggles.metalPulse;
+ this.toggleConfigs.forEach(config => {
+    this.state[config.stateKey] = !!toggles[config.nodeKey];
+ });
 
  this.initUIState();
  this.ui.intensitySlider.value = preset.intensity;
@@ -1609,186 +973,198 @@
  
  // --- Event Handlers ---
  async handlePlayPause() {
- if (this.state.isInteracting) return;
- this.state.isInteracting = true;
- try {
- if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
- await this.startEngine(true);
- } else if (this.audio.ctx.state === 'running') {
- this.pauseEngine();
- this.updatePlayPauseButton('play');
- } else if (this.audio.ctx.state === 'suspended') {
- await this.startEngine(false);
- }
- } finally {
- this.state.isInteracting = false;
- }
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+
+    try {
+        const engine = this.soundEngine;
+        
+        // One-time context creation on first ever interaction.
+        if (!engine.ctx || engine.ctx.state === 'closed') {
+            engine.ctx = engine._createContext();
+        }
+
+        // ALWAYS resume context if the browser suspended it (e.g., tab change).
+        // This is the key to fixing the two-click issue reliably.
+        if (engine.ctx.state === 'suspended') {
+            await engine.ctx.resume();
+        }
+
+        if (this.state.isPlaying) {
+            // --- PAUSE ---
+            engine.pause();
+            this.updatePlayPauseButton('play');
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+            this.state.isPlaying = false;
+        } else {
+            // --- PLAY / RESUME ---
+            // If the audio graph doesn't exist yet, it's the very first play.
+            if (Object.keys(engine.nodes).length === 0) { 
+                const initialStageRecipe = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+                const activeToggles = this.toggleConfigs.reduce((acc, conf) => {
+                    acc[conf.nodeKey] = this.state[conf.stateKey];
+                    return acc;
+                }, {});
+                await engine.init(initialStageRecipe, activeToggles, this.ui.intensitySlider.value);
+                this.state.sessionElapsedTime = 0;
+                this.updateMediaSessionMetadata(0);
+            }
+            engine.resume();
+            this.updatePlayPauseButton('pause');
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+            this.state.isPlaying = true;
+        }
+    } finally {
+        this.state.isInteracting = false;
+    }
+},
+
+ async goToNextStage() {
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+    try {
+        if (!this.soundEngine.ctx) {
+            await this.handlePlayPause();
+            return;
+        }
+        if (this.state.currentStage >= this.state.STAGES.length - 1) {
+            await this.soundEngine.stop();
+            return;
+        }
+        const nextStageIndex = this.state.currentStage + 1;
+        const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
+        const stageDur = totalDur / this.state.STAGES.length;
+        this.state.sessionElapsedTime = nextStageIndex * stageDur;
+        if(this.state.autoplayInterval) this.state.lastTickTime = performance.now();
+        
+        const stageRecipe = this.state.STAGES[nextStageIndex];
+        this.soundEngine.setStage(stageRecipe);
+
+        if (this.state.isPlaying && this.soundEngine.ctx.state === 'suspended') {
+            await this.soundEngine.resume();
+        }
+    } finally {
+        this.state.isInteracting = false;
+    }
  },
 
- handleIntensityChange(e) {
- this.ui.intLabel.textContent = e.target.value;
- if (this.audio.ctx && this.audio.effectsGain) {
- try {
- const intensity = parseFloat(e.target.value);
- this.audio.effectsGain.gain.linearRampToValueAtTime(intensity, this.audio.ctx.currentTime + 0.1);
- } catch (error) { console.error("Could not update gain:", error); }
+ async goToPreviousStage() {
+    if (this.state.isInteracting || !this.soundEngine.ctx || this.state.currentStage <= 0) return;
+    this.state.isInteracting = true;
+    try {
+        const prevStageIndex = this.state.currentStage - 1;
+        const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
+        const stageDur = totalDur / this.state.STAGES.length;
+        this.state.sessionElapsedTime = prevStageIndex * stageDur;
+        if(this.state.autoplayInterval) this.state.lastTickTime = performance.now();
+        
+        const stageRecipe = this.state.STAGES[prevStageIndex];
+        this.soundEngine.setStage(stageRecipe);
+
+        if (this.state.isPlaying && this.soundEngine.ctx.state === 'suspended') {
+            await this.soundEngine.resume();
+        }
+    } finally {
+        this.state.isInteracting = false;
+    }
+ },
+
+ handleIntensityChange(value) {
+ this.ui.intLabel.textContent = value;
+ if (this.soundEngine.ctx) {
+     this.soundEngine.setIntensity(parseFloat(value));
  }
  },
 
  handleToggle(stateKey, button, checkmark, nodeKey) {
- this.state[stateKey] = !this.state[stateKey];
- this.toggleCheckmark(button, checkmark, this.state[stateKey]);
- 
- if (this.audio.ctx && this.audio.nodes[nodeKey] && this.audio.nodes[nodeKey].gainSwitch) {
- const node = this.audio.nodes[nodeKey];
- const targetGain = this.state[stateKey] ? 1 : 0;
- node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
- 
- // Special handling for nodes with independent loops, only if engine is running
- if (node.startLoop && node.stopLoop && this.audio.ctx.state === 'running') {
- if (this.state[stateKey]) {
-  node.startLoop();
- } else {
-  node.stopLoop();
- }
- }
- }
+    this.state[stateKey] = !this.state[stateKey];
+    this.toggleCheckmark(button, checkmark, this.state[stateKey]);
+    this.soundEngine.toggleEffect(nodeKey, this.state[stateKey]);
  },
 
  async handlePresetChange(e) {
- if (this.state.isInteracting) return;
- this.state.isInteracting = true;
- try {
- const presetName = e.target.value;
- const preset = this.PRESETS[presetName];
- if (!preset) return;
+    if (this.state.isInteracting) return;
+    this.state.isInteracting = true;
+    try {
+        const presetName = e.target.value;
+        const preset = this.PRESETS[presetName];
+        if (!preset) return;
 
- this.state.STAGES = preset.stages;
- this.updatePresetUI(preset);
- 
- if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
- await this.stopEngine();
- await this.startEngine(true);
- }
- this.updateUIStage(-1);
- } finally {
- this.state.isInteracting = false;
- }
+        this.state.STAGES = preset.stages;
+        this.updatePresetUI(preset);
+
+        if (this.state.isPlaying) {
+            await this.soundEngine.transitionToPreset(preset);
+        } else {
+            if (this.soundEngine.ctx && this.soundEngine.ctx.state !== 'closed') {
+                await this.soundEngine.stop();
+            } else {
+                this.updateUIStage(-1);
+            }
+        }
+    } finally {
+        this.state.isInteracting = false;
+    }
  },
  
  handleSaveAudio() {
- const btn = this.ui.saveAudioBtn;
- btn.disabled = true;
- btn.textContent = 'Generating... Please Wait';
+    const btn = this.ui.saveAudioBtn;
+    btn.disabled = true;
+    btn.textContent = 'Generating... Please Wait';
  
- // Use a timeout to allow the UI to update before the heavy work starts
- setTimeout(async () => {
- try {
- const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
- const sampleRate = 44100;
+    setTimeout(async () => {
+        try {
+            const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
+            const sampleRate = 44100;
+            const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
+            
+            const initialStageRecipe = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+            const activeToggles = this.toggleConfigs.reduce((acc, conf) => {
+                acc[conf.nodeKey] = this.state[conf.stateKey];
+                return acc;
+            }, {});
+            const intensity = parseFloat(this.ui.intensitySlider.value);
 
- const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
- const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
- const nodes = await this.createAudioGraph(offlineCtx, initialStage);
+            const offlineMasterGain = offlineCtx.createGain();
+            offlineMasterGain.connect(offlineCtx.destination);
+            
+            const nodes = await this.soundEngine._createAudioGraph(offlineCtx, offlineMasterGain, initialStageRecipe, activeToggles, intensity);
+            offlineMasterGain.gain.setValueAtTime(this.config.MASTER_GAIN_MULTIPLIER, 0);
 
- // --- Schedule all audio events for offline rendering ---
- 
- // Set initial gain
- nodes.masterGain.gain.setValueAtTime(this.config.MASTER_GAIN_MULTIPLIER, 0);
+            const stageDur = durationSeconds / this.state.STAGES.length;
+            this.state.STAGES.forEach((stage, idx) => {
+                const startTime = idx * stageDur;
+                this.soundEngine.setStage(stage, nodes, startTime);
+            });
 
- // Schedule stage changes
- const totalDur = durationSeconds;
- const stageDur = totalDur / this.state.STAGES.length;
- this.state.STAGES.forEach((stage, idx) => {
- const startTime = idx * stageDur;
- const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
+            if (nodes.bowl && activeToggles.bowl) {
+                for (let t = 0; t < durationSeconds; t += 60) {
+                    nodes.bowl.trigger(t);
+                }
+            }
+            
+            const renderedBuffer = await offlineCtx.startRendering();
 
- nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
- nodes.pad.setFilter(stage.padCut, startTime, rampTime);
- if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
- if (nodes.noise) {
-  const noiseGain = stage.noise;
-  if (startTime === 0) nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
-  else nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
- }
- if (nodes.deepSleep) {
-  const leftFreq = Math.max(8, stage.base - stage.beat / 2);
-  const rightFreq = Math.max(8, stage.base + stage.beat / 2);
-  if (startTime === 0) {
-  nodes.deepSleep.leftOsc.frequency.setValueAtTime(leftFreq, 0);
-  nodes.deepSleep.rightOsc.frequency.setValueAtTime(rightFreq, 0);
-  } else {
-  nodes.deepSleep.leftOsc.frequency.linearRampToValueAtTime(leftFreq, startTime + rampTime);
-  nodes.deepSleep.rightOsc.frequency.linearRampToValueAtTime(rightFreq, startTime + rampTime);
-  }
-  const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled) ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : this.config.MIN_GAIN;
-  if (startTime === 0) nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
-  else nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
- }
- });
+            btn.textContent = 'Encoding WAV...';
+            const wavBlob = this.bufferToWav(renderedBuffer);
+            const url = URL.createObjectURL(wavBlob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
 
- // Schedule singing bowl triggers
- if (nodes.bowl && this.state.isBowlEnabled) {
- for (let t = 0; t < durationSeconds; t += 60) {
-  const envelope = nodes.bowl.envelope;
-  envelope.gain.setValueAtTime(0, t);
-  envelope.gain.linearRampToValueAtTime(1.0, t + 0.2);
-  envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, t + 45);
- }
- }
- 
- // Schedule shamanic drum beats
- if (nodes.drum && this.state.isDrumEnabled) {
- nodes.drum.source.gain.setValueAtTime(0.7, 0);
- const customWave = this.createDrumWave(offlineCtx);
- const scheduleOfflineBeat = (frequency, time, decay, gain) => {
-  const osc = offlineCtx.createOscillator();
-  osc.setPeriodicWave(customWave);
-  osc.frequency.setValueAtTime(frequency, time);
-  const oscGain = offlineCtx.createGain();
-  const lowpass = offlineCtx.createBiquadFilter();
-  lowpass.type = 'lowpass';
-  lowpass.frequency.setValueAtTime(350, time);
-  lowpass.Q.value = 0.2;
-  const panner = offlineCtx.createStereoPanner();
-  osc.connect(oscGain); oscGain.connect(lowpass); lowpass.connect(panner); panner.connect(nodes.drum.source);
-  oscGain.gain.setValueAtTime(0, time);
-  oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
-  oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-  panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
-  osc.start(time);
-  osc.stop(time + decay + 0.1);
- };
- const patternPeriod = 10.0;
- for (let t = 0; t < durationSeconds; t += patternPeriod) {
-  scheduleOfflineBeat(40, t, 12.0, 0.65);
-  scheduleOfflineBeat(55, t, 4.0, 0.45);
- }
- }
-
- // Render the audio
- const renderedBuffer = await offlineCtx.startRendering();
-
- btn.textContent = 'Encoding WAV...';
- const wavBlob = this.bufferToWav(renderedBuffer);
- const url = URL.createObjectURL(wavBlob);
- const a = document.createElement('a');
- a.style.display = 'none';
- a.href = url;
- a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
- document.body.appendChild(a);
- a.click();
- window.URL.revokeObjectURL(url);
- a.remove();
-
- } catch (error) {
- console.error('Failed to save audio:', error);
- alert('An error occurred while saving the audio. Please check the console for details.');
- } finally {
- btn.disabled = false;
- btn.textContent = 'Save Audio';
- }
- }, 100);
+        } catch (error) {
+            console.error('Failed to save audio:', error);
+            alert('An error occurred while saving the audio. Please check the console for details.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save Audio';
+        }
+    }, 100);
  },
 
  bufferToWav(buffer) {
@@ -1799,27 +1175,20 @@
 
  const writeString = (v, o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
 
- // RIFF chunk descriptor
  writeString(view, pos, 'RIFF'); pos += 4;
- view.setUint32(pos, length - 8, true); pos += 4; // chunk size
- writeString(view, pos, 'WAVE'); pos += 4; // format
-
- // "fmt " sub-chunk
- writeString(view, pos, 'fmt '); pos += 4; // sub-chunk 1 ID
- view.setUint32(pos, 16, true); pos += 4; // sub-chunk 1 size
- view.setUint16(pos, 1, true); pos += 2; // audio format (1 = PCM)
- view.setUint16(pos, numOfChan, true); pos += 2; // number of channels
- view.setUint32(pos, buffer.sampleRate, true); pos += 4; // sample rate
- view.setUint32(pos, buffer.sampleRate * 2 * numOfChan, true); pos += 4; // byte rate (SampleRate * NumChannels * BitsPerSample/8)
- view.setUint16(pos, numOfChan * 2, true); pos += 2; // block align (NumChannels * BitsPerSample/8)
- view.setUint16(pos, 16, true); pos += 2; // bits per sample
-
- // "data" sub-chunk
- writeString(view, pos, 'data'); pos += 4; // sub-chunk 2 ID
- view.setUint32(pos, length - pos - 4, true); pos += 4; // sub-chunk 2 size (NumSamples * NumChannels * BitsPerSample/8)
-
+ view.setUint32(pos, length - 8, true); pos += 4;
+ writeString(view, pos, 'WAVE'); pos += 4;
+ writeString(view, pos, 'fmt '); pos += 4;
+ view.setUint32(pos, 16, true); pos += 4;
+ view.setUint16(pos, 1, true); pos += 2;
+ view.setUint16(pos, numOfChan, true); pos += 2;
+ view.setUint32(pos, buffer.sampleRate, true); pos += 4;
+ view.setUint32(pos, buffer.sampleRate * 2 * numOfChan, true); pos += 4;
+ view.setUint16(pos, numOfChan * 2, true); pos += 2;
+ view.setUint16(pos, 16, true); pos += 2;
+ writeString(view, pos, 'data'); pos += 4;
+ view.setUint32(pos, length - pos - 4, true); pos += 4;
  for (i = 0; i < buffer.numberOfChannels; i++) channels.push(buffer.getChannelData(i));
-
  while (pos < length) {
  for (i = 0; i < numOfChan; i++) {
  sample = Math.max(-1, Math.min(1, channels[i][offset]));
@@ -1829,12 +1198,545 @@
  }
  offset++;
  }
- 
  return new Blob([view], { type: 'audio/wav' });
  },
- };
  
- window.onload = () => app.init();
+  // --- SOUND ENGINE ---
+  soundEngine: {
+    app: null, // Will be set on init
+    ctx: null, masterGain: null, effectsGain: null, nodes: {},
+
+    // --- Engine Lifecycle ---
+    async init(initialStageRecipe, activeToggles, initialIntensity) {
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+        this.masterGain.connect(this.ctx.destination);
+        
+        this.nodes = await this._createAudioGraph(this.ctx, this.masterGain, initialStageRecipe, activeToggles, initialIntensity);
+        this.effectsGain = this.nodes.effectsGain;
+        this.setStage(initialStageRecipe, this.nodes, this.ctx.currentTime, 0.1);
+    },
+
+    resume() {
+        if (!this.ctx || !this.masterGain) return;
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.linearRampToValueAtTime(this.app.config.MASTER_GAIN_MULTIPLIER, this.ctx.currentTime + this.app.config.RESUME_FADE_DURATION_S);
+        
+        if (this.nodes.bowl && this.app.state.isBowlEnabled) this.nodes.bowl.startLoop();
+        this.app.startAuto();
+    },
+
+    async stop() {
+        if (!this.ctx) return;
+        this.app.stopAuto();
+        if (this.nodes.bowl) this.nodes.bowl.stopLoop();
+        this.app.state.sessionElapsedTime = 0;
+        this.app.state.isPlaying = false;
+
+        try {
+            this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+            this.masterGain.gain.linearRampToValueAtTime(this.app.config.MIN_GAIN, this.ctx.currentTime + this.app.config.FADE_DURATION_S);
+        } catch (e) { console.error("Error stopping gain ramp:", e); }
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                try { 
+                    if (this.ctx && this.ctx.state !== 'closed') {
+                        this._clearAudioGraph();
+                        this.ctx.close().then(() => {
+                           this.ctx = null;
+                        });
+                    }
+                } catch (e) {}
+                this.app.state.currentStage = -1;
+                this.app.updatePlayPauseButton('play');
+                this.app.updateUIStage(-1);
+                this.app.updateMediaSessionMetadata(-1);
+                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+                resolve();
+            }, this.app.config.FADE_DURATION_S * 1000);
+        });
+    },
+
+    pause() {
+        if (!this.ctx || !this.masterGain) return;
+        this.app.stopAuto();
+        if (this.nodes.bowl) this.nodes.bowl.stopLoop();
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.linearRampToValueAtTime(this.app.config.MIN_GAIN, this.ctx.currentTime + this.app.config.PAUSE_FADE_DURATION_S);
+    },
+
+    async transitionToPreset(preset) {
+        if (!this.ctx || this.ctx.state !== 'running') return;
+        const fadeS = 1.0;
+
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.linearRampToValueAtTime(this.app.config.MIN_GAIN, this.ctx.currentTime + fadeS);
+        await new Promise(resolve => setTimeout(resolve, fadeS * 1000));
+        
+        this._clearAudioGraph();
+        
+        const initialStageRecipe = preset.stages[0];
+        const activeToggles = this.app.toggleConfigs.reduce((acc, conf) => {
+            acc[conf.nodeKey] = this.app.state[conf.stateKey];
+            return acc;
+        }, {});
+        const initialIntensity = parseFloat(this.app.ui.intensitySlider.value);
+        
+        this.nodes = await this._createAudioGraph(this.ctx, this.masterGain, initialStageRecipe, activeToggles, initialIntensity);
+        this.effectsGain = this.nodes.effectsGain;
+        
+        this.setStage(initialStageRecipe, this.nodes, this.ctx.currentTime, 0.1);
+        if (this.nodes.bowl && this.app.state.isBowlEnabled) this.nodes.bowl.startLoop();
+        
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.linearRampToValueAtTime(this.app.config.MASTER_GAIN_MULTIPLIER, this.ctx.currentTime + fadeS);
+
+        this.app.state.currentStage = 0;
+        this.app.state.sessionElapsedTime = 0;
+        if (this.app.state.autoplayInterval) this.app.state.lastTickTime = performance.now();
+        this.app.updateUIStage(0);
+        this.app.updateMediaSessionMetadata(0);
+    },
+
+    // --- Engine Public API ---
+    setStage(stageRecipe, nodeSet = this.nodes, when = this.ctx.currentTime, ramp = this.app.config.STAGE_CHANGE_RAMP_S) {
+        if (!this.ctx && !nodeSet.carrier) return;
+        const stageIndex = this.app.state.STAGES.findIndex(s => s.name === stageRecipe.name);
+        if (stageIndex !== -1) this.app.state.currentStage = stageIndex;
+        
+        nodeSet.carrier.setBinaural(stageRecipe.base, stageRecipe.beat, when, ramp);
+        nodeSet.pad.setFilter(stageRecipe.padCut, when, ramp);
+        if (nodeSet.iso) nodeSet.iso.setRate(stageRecipe.iso, when, ramp);
+        if (nodeSet.noise) nodeSet.noise.source.gain.linearRampToValueAtTime(stageRecipe.noise, when + ramp);
+        if (nodeSet.deepSleep) {
+            const targetGain = stageRecipe.deepSleepOn ? this.app.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
+            nodeSet.deepSleep.setBinaural(stageRecipe.base, stageRecipe.beat, when, ramp);
+            nodeSet.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
+        }
+        
+        if (this.ctx && this.ctx.state !== 'closed') { // Only update UI for live engine
+            this.app.updateUIStage(this.app.state.currentStage);
+            this.app.updateMediaSessionMetadata(this.app.state.currentStage);
+        }
+    },
+
+    setIntensity(value, ramp = 0.1) {
+        if (this.effectsGain) {
+            this.effectsGain.gain.linearRampToValueAtTime(value, this.ctx.currentTime + ramp);
+        }
+    },
+
+    toggleEffect(effectKey, isEnabled) {
+        if (this.ctx && this.nodes[effectKey] && this.nodes[effectKey].gainSwitch) {
+            const node = this.nodes[effectKey];
+            const targetGain = isEnabled ? 1 : 0;
+            node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.ctx.currentTime + 0.5);
+            if (node.startLoop && node.stopLoop && this.app.state.isPlaying) {
+                if (isEnabled) node.startLoop(); else node.stopLoop();
+            }
+        }
+    },
+
+    // --- Audio Node Creation (Private) ---
+    _clearAudioGraph() {
+        if (!this.nodes || Object.keys(this.nodes).length === 0) return;
+        
+        try { this.nodes.carrier.outputLeft.disconnect(); } catch(e){}
+        try { this.nodes.carrier.outputRight.disconnect(); } catch(e){}
+        try { this.nodes.pad.output.disconnect(); } catch(e){}
+        try { this.nodes.effectsGain.disconnect(); } catch(e){}
+        try { this.nodes.reverb.disconnect(); } catch(e){}
+
+        try { this.nodes.carrier.leftOsc.stop(); } catch(e){}
+        try { this.nodes.carrier.rightOsc.stop(); } catch(e){}
+        
+        this.app.toggleConfigs.forEach(config => {
+            const node = this.nodes[config.nodeKey];
+            if (!node) return;
+            
+            if (node.stopLoop) try { node.stopLoop(); } catch(e) {}
+            if (node.source && node.source.stop) try { node.source.stop(); } catch(e) {}
+            if (node.gate && node.gate.stop) try { node.gate.stop(); } catch(e) {}
+            if (node.baseGain && node.baseGain.stop) try { node.baseGain.stop(); } catch(e) {}
+        });
+
+        this.nodes = {};
+    },
+
+    _createContext() {
+        if (this.ctx) { try { this.ctx.close(); } catch(e) {} }
+        return new (window.AudioContext || window.webkitAudioContext)();
+    },
+
+    _createReverb(ctx, duration = 3, decay = 2.0) {
+        const rate = ctx.sampleRate, len = Math.floor(duration * rate), buf = ctx.createBuffer(2, len, rate);
+        for(let ch = 0; ch < 2; ch++) {
+            const d = buf.getChannelData(ch);
+            for(let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - (i / rate) / duration, decay);
+        }
+        const conv = ctx.createConvolver(); conv.buffer = buf; return conv;
+    },
+    
+    _createCarrierPair(ctx, stageRecipe) {
+        const left = ctx.createOscillator(), right = ctx.createOscillator(); left.type = right.type = 'sine';
+        left.frequency.setValueAtTime(Math.max(8, stageRecipe.base - stageRecipe.beat / 2), ctx.currentTime);
+        right.frequency.setValueAtTime(Math.max(8, stageRecipe.base + stageRecipe.beat / 2), ctx.currentTime);
+        left.start(); right.start();
+        
+        const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.06;
+        const lfoG = ctx.createGain(); lfoG.gain.value = 1.6;
+        lfo.connect(lfoG); lfoG.connect(left.frequency); lfoG.connect(right.frequency); lfo.start();
+
+        const panL = ctx.createStereoPanner(); panL.pan.value = -0.6;
+        const panR = ctx.createStereoPanner(); panR.pan.value = 0.6;
+        const gL = ctx.createGain(), gR = ctx.createGain(); gL.gain.value = gR.gain.value = 0.45;
+        left.connect(panL); right.connect(panR); panL.connect(gL); panR.connect(gR);
+
+        return {
+            leftOsc: left, rightOsc: right, outputLeft: gL, outputRight: gR,
+            setBinaural: (base, beat, when, ramp) => {
+                left.frequency.linearRampToValueAtTime(Math.max(8, base - beat / 2), when + ramp);
+                right.frequency.linearRampToValueAtTime(Math.max(8, base + beat / 2), when + ramp);
+            }
+        };
+    },
+
+    _createPadLayer(ctx) {
+        const master = ctx.createGain(); master.gain.value = 0.0;
+        const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7;
+        master.connect(filter);
+
+        const out = ctx.createGain(); out.gain.value = this.app.config.PAD_GAIN_MULTIPLIER; filter.connect(out);
+        const base = 110;
+        for(let i = 0; i < 3; i++) {
+            const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = base * (1 + (i-1)*0.02);
+            const lfo = ctx.createOscillator(); lfo.frequency.value = 0.02 + Math.random()*0.04;
+            const lg = ctx.createGain(); lg.gain.value = 0.5 + Math.random()*0.6;
+            lfo.connect(lg); lg.connect(osc.frequency); lfo.start(); osc.start(); osc.connect(master);
+        }
+
+        const ampLFO = ctx.createOscillator(); ampLFO.frequency.value = 0.03;
+        const ampG = ctx.createGain(); ampG.gain.value = 0.25;
+        ampLFO.connect(ampG); ampG.connect(master.gain); ampLFO.start();
+        return { output: out, filter, setFilter: (cut, when, ramp) => filter.frequency.linearRampToValueAtTime(cut, when + ramp) };
+    },
+
+    _createPinkNoise(ctx) {
+        const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0;
+        for(let i = 0; i < data.length; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99765 * b0 + white * 0.0990460; b1 = 0.96300 * b1 + white * 0.2965164;
+            data[i] = (b0 + b1 + white * 0.1848) * 0.25;
+        }
+        const src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
+        const g = ctx.createGain(); src.connect(g); src.start(); return g;
+    },
+
+    _createIsoLayer(ctx, stageRecipe) {
+        const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 80;
+        const outG = ctx.createGain(); // Final output gain, which will be modulated
+
+        // Create the LFO for a smooth tremolo effect
+        const gate = ctx.createOscillator(); gate.type = 'sine'; // Use a smooth sine wave to prevent clicks
+        gate.frequency.setValueAtTime(stageRecipe.iso, ctx.currentTime);
+
+        // This gain node controls the depth of the modulation (how much the volume changes)
+        const tremoloDepth = ctx.createGain();
+        tremoloDepth.gain.value = 0.4; // A depth of 0.4 means volume oscillates by +/- 40%
+
+        // A constant source provides the base (center) gain level for the tremolo.
+        const baseGain = ctx.createConstantSource();
+        baseGain.offset.value = 0.5; // Center the volume at 50%
+
+        // Connect the LFO (gate) through its depth control to the output gain parameter
+        gate.connect(tremoloDepth);
+        tremoloDepth.connect(outG.gain);
+
+        // Connect the base gain level to the output gain parameter as well.
+        // The final gain will be the sum: 0.5 + (sine wave from -0.4 to +0.4), resulting in a smooth 0.1 to 0.9 oscillation.
+        baseGain.connect(outG.gain);
+
+        // Connect the sound source (osc) to the now-modulated gain node
+        osc.connect(outG);
+        
+        // Start all the audio sources
+        osc.start();
+        gate.start();
+        baseGain.start();
+
+        return { output: outG, gainNode: outG, gate, baseGain, setRate: (hz, when, ramp) => gate.frequency.linearRampToValueAtTime(hz, when + ramp) };
+    },
+
+    _createWindSound(ctx) {
+        const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), output = buffer.getChannelData(0);
+        for (let i = 0; i < output.length; i++) output[i] = Math.random() * 2 - 1;
+        const source = ctx.createBufferSource(); source.buffer = buffer; source.loop = true;
+        const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 400; filter.Q.value = 0.5;
+        const gainLFO = ctx.createOscillator(); gainLFO.type = 'sine'; gainLFO.frequency.value = 0.08;
+        const gainMod = ctx.createGain(); gainMod.gain.value = 0.3; gainLFO.connect(gainMod);
+        const mainGain = ctx.createGain(); mainGain.gain.value = 0.15;
+        const panner = ctx.createStereoPanner(); panner.pan.value = 0;
+        const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.05;
+        const panMod = ctx.createGain(); panMod.gain.value = 0.8; panLFO.connect(panMod); panMod.connect(panner.pan);
+        source.connect(filter); filter.connect(mainGain); gainMod.connect(mainGain.gain); mainGain.connect(panner);
+        source.start(); gainLFO.start(); panLFO.start();
+        return { output: panner, gainNode: mainGain };
+    },
+    
+    _createDrumWave(ctx) {
+        const numHarmonics = 32, real = new Float32Array(numHarmonics), imag = new Float32Array(numHarmonics);
+        real[0] = 0; imag[0] = 0;
+        for (let i = 1; i < numHarmonics; ++i) {
+            real[i] = (i % 2 !== 0) ? ((-1) ** ((i - 1) / 2)) * (1 / (i * i)) : 0;
+            imag[i] = 0;
+        }
+        return ctx.createPeriodicWave(real, imag, { disableNormalization: true });
+    },
+
+    async _createShamanicDrum(ctx) {
+        const LOOP_DURATION_S = 10.0; // 6 BPM
+        const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * ctx.sampleRate), ctx.sampleRate);
+        const mainGain = offlineCtx.createGain(); mainGain.gain.value = 0.847; mainGain.connect(offlineCtx.destination);
+        const customWave = this._createDrumWave(offlineCtx);
+        const scheduleBeat = (frequency, time, decay, gain) => {
+            const osc = offlineCtx.createOscillator(); osc.setPeriodicWave(customWave);
+            osc.frequency.setValueAtTime(frequency + (Math.random() - 0.5) * 2, time);
+            const oscGain = offlineCtx.createGain(), lowpass = offlineCtx.createBiquadFilter(), panner = offlineCtx.createStereoPanner();
+            lowpass.type = 'lowpass'; lowpass.frequency.setValueAtTime(350, time); lowpass.Q.value = 0.2;
+            panner.pan.setValueAtTime((Math.random() - 0.5) * 1.8, time);
+            osc.connect(oscGain); oscGain.connect(lowpass); lowpass.connect(panner); panner.connect(mainGain);
+            oscGain.gain.setValueAtTime(0, time);
+            oscGain.gain.linearRampToValueAtTime(gain + (Math.random() - 0.5) * 0.2, time + 0.01);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+            osc.start(time); osc.stop(time + decay + 0.1);
+        };
+        scheduleBeat(40, 0, 12.0, 0.65); scheduleBeat(55, 0, 4.0, 0.45);
+        const source = ctx.createBufferSource(); source.buffer = await offlineCtx.startRendering();
+        source.loop = true; source.start();
+        return { output: source };
+    },
+
+    _createSingingBowl(ctx) {
+        const partials = [{ f: 1, g: 1.0 }, { f: 2.005, g: 0.7 }, { f: 3.42, g: 0.55 }, { f: 4.0, g: 0.25 }, { f: 5.71, g: 0.35 }];
+        const mainGain = ctx.createGain(); mainGain.gain.value = 0.35;
+        const panner = ctx.createStereoPanner(); mainGain.connect(panner);
+        const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.025;
+        const panMod = ctx.createGain(); panMod.gain.value = 0.9; panLFO.connect(panMod); panMod.connect(panner.pan); panLFO.start();
+        const envelope = ctx.createGain(); envelope.gain.value = 0.0; envelope.connect(mainGain);
+        partials.forEach(p => {
+            const osc = ctx.createOscillator(), vibLFO = ctx.createOscillator(), vibDepth = ctx.createGain(), partialGain = ctx.createGain();
+            osc.type = 'sine'; osc.frequency.value = 90 * p.f;
+            vibLFO.type = 'sine'; vibLFO.frequency.value = 2.5 + Math.random() * 2;
+            vibDepth.gain.value = 90 * p.f * 0.004; vibLFO.connect(vibDepth); vibDepth.connect(osc.frequency);
+            partialGain.gain.value = p.g; osc.connect(partialGain); partialGain.connect(envelope);
+            osc.start(); vibLFO.start();
+        });
+        const trigger = (time) => {
+            try {
+                envelope.gain.cancelScheduledValues(time);
+                envelope.gain.setValueAtTime(0, time);
+                envelope.gain.linearRampToValueAtTime(1.0, time + 0.2);
+                envelope.gain.exponentialRampToValueAtTime(this.app.config.MIN_GAIN, time + 45);
+            } catch (e) { console.error("Error scheduling singing bowl:", e); }
+        };
+        let intervalId = null;
+        const startLoop = () => {
+            if (intervalId) clearInterval(intervalId);
+            trigger(ctx.currentTime);
+            intervalId = setInterval(() => { if (ctx.state === 'running') trigger(ctx.currentTime); }, 60000);
+        };
+        const stopLoop = () => {
+            if (intervalId) clearInterval(intervalId); intervalId = null;
+            envelope.gain.cancelScheduledValues(ctx.currentTime);
+            envelope.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
+        };
+        return { output: panner, gainNode: mainGain, trigger, startLoop, stopLoop, envelope };
+    },
+
+    _createDeepSleepBinaural(ctx, stageRecipe) {
+        const leftOsc = ctx.createOscillator(), rightOsc = ctx.createOscillator(); leftOsc.type = rightOsc.type = 'sine';
+        leftOsc.frequency.setValueAtTime(Math.max(8, stageRecipe.base - stageRecipe.beat / 2), ctx.currentTime);
+        rightOsc.frequency.setValueAtTime(Math.max(8, stageRecipe.base + stageRecipe.beat / 2), ctx.currentTime);
+        leftOsc.start(); rightOsc.start();
+        
+        const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
+        const masterGain = ctx.createGain(); masterGain.gain.value = this.app.config.DEEP_SLEEP_GAIN_MULTIPLIER;
+        const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
+        volumeLFO.connect(volGainMod); volGainMod.connect(masterGain.gain);
+        
+        const leftPanner = ctx.createStereoPanner(), rightPanner = ctx.createStereoPanner(), panLFO = ctx.createOscillator(), panMod = ctx.createGain(), panInverter = ctx.createGain(), merger = ctx.createChannelMerger(2);
+        panLFO.type = 'sine'; panLFO.frequency.value = 0.015; panLFO.start(); panMod.gain.value = 1.0; panInverter.gain.value = -1;
+        panLFO.connect(panMod); panMod.connect(leftPanner.pan); panMod.connect(panInverter); panInverter.connect(rightPanner.pan);
+        leftOsc.connect(leftPanner); rightOsc.connect(rightPanner);
+        leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1); merger.connect(masterGain);
+        
+        return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat, when, ramp) => {
+            leftOsc.frequency.linearRampToValueAtTime(Math.max(8, base - beat / 2), when + ramp);
+            rightOsc.frequency.linearRampToValueAtTime(Math.max(8, base + beat / 2), when + ramp);
+        }};
+    },
+    
+    async _createBrainPulse(ctx) {
+        const LOOP_DURATION_S = 15;
+        const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * ctx.sampleRate), ctx.sampleRate);
+        const masterOutput = offlineCtx.createGain();
+        const compressor = offlineCtx.createDynamicsCompressor();
+        
+        compressor.threshold.value = -24;
+        compressor.knee.value = 30;
+        compressor.ratio.value = 12;
+        compressor.attack.value = 0.003;
+        compressor.release.value = 0.25;
+
+        masterOutput.connect(compressor);
+        compressor.connect(offlineCtx.destination);
+
+        const nodes = ['mainOscillator', 'lfoOscillator', 'pannerLFO', 'chorusOscillator1', 'chorusOscillator2'].reduce((acc, k) => (acc[k] = offlineCtx.createOscillator(), acc), {});
+        const gains = ['tremoloGain', 'volumeRampGain', 'chorusGain1', 'chorusGain2'].reduce((acc, k) => (acc[k] = offlineCtx.createGain(), acc), {});
+        const pannerNode = offlineCtx.createStereoPanner();
+        
+        nodes.mainOscillator.type = 'sine';
+        nodes.mainOscillator.frequency.value = 55;
+        nodes.lfoOscillator.type = 'sine';
+        nodes.lfoOscillator.frequency.value = 4;
+        nodes.pannerLFO.type = 'sine';
+        nodes.pannerLFO.frequency.value = 0.1;
+        nodes.chorusOscillator1.type = 'sine';
+        nodes.chorusOscillator1.frequency.value = 27.5;
+        nodes.chorusOscillator2.type = 'sine';
+        nodes.chorusOscillator2.frequency.value = 27.5;
+        
+        gains.volumeRampGain.gain.value = 0;
+        gains.chorusGain1.gain.value = 0;
+        gains.chorusGain2.gain.value = 0;
+        gains.tremoloGain.gain.value = 0.5;
+        
+        nodes.mainOscillator.connect(gains.volumeRampGain).connect(pannerNode).connect(masterOutput);
+        nodes.lfoOscillator.connect(gains.tremoloGain).connect(gains.volumeRampGain.gain);
+        nodes.pannerLFO.connect(pannerNode.pan);
+        nodes.chorusOscillator1.connect(gains.chorusGain1).connect(masterOutput);
+        nodes.chorusOscillator2.connect(gains.chorusGain2).connect(masterOutput);
+
+        const now = 0, endTime = now + LOOP_DURATION_S;
+        const FADE_IN_TIME = 0.02;
+        const FADE_OUT_TIME = 1.5;
+
+        // Main Oscillator
+        nodes.mainOscillator.frequency.setValueAtTime(55, now);
+        nodes.mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
+        gains.volumeRampGain.gain.setValueAtTime(0, now);
+        gains.volumeRampGain.gain.linearRampToValueAtTime(1.0, now + FADE_IN_TIME);
+        gains.volumeRampGain.gain.setValueAtTime(1.0, endTime - FADE_OUT_TIME);
+        gains.volumeRampGain.gain.linearRampToValueAtTime(0, endTime);
+
+        // LFO
+        nodes.lfoOscillator.frequency.setValueAtTime(4, now);
+        nodes.lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
+
+        // Chorus Oscillators
+        nodes.chorusOscillator1.frequency.setValueAtTime(27.5, now);
+        nodes.chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
+        nodes.chorusOscillator2.frequency.setValueAtTime(27.5, now);
+        nodes.chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
+        
+        // Chorus Gains with fade in/out
+        gains.chorusGain1.gain.setValueAtTime(0, now);
+        gains.chorusGain1.gain.linearRampToValueAtTime(0.05, now + FADE_IN_TIME);
+        gains.chorusGain1.gain.setValueAtTime(0.3, endTime - FADE_OUT_TIME);
+        gains.chorusGain1.gain.linearRampToValueAtTime(0, endTime);
+
+        gains.chorusGain2.gain.setValueAtTime(0, now);
+        gains.chorusGain2.gain.linearRampToValueAtTime(0.05, now + FADE_IN_TIME);
+        gains.chorusGain2.gain.setValueAtTime(0.3, endTime - FADE_OUT_TIME);
+        gains.chorusGain2.gain.linearRampToValueAtTime(0, endTime);
+        
+        Object.values(nodes).forEach(n => n.start(now));
+        
+        const source = ctx.createBufferSource();
+        source.buffer = await offlineCtx.startRendering();
+        source.loop = true;
+        source.start();
+        return { output: source };
+    },
+
+    async _createAudioGraph(ctx, destinationNode, initialStage, activeToggles, initialIntensity) {
+        const effectsGain = ctx.createGain(); effectsGain.gain.value = initialIntensity; effectsGain.connect(destinationNode);
+        const nodes = { effectsGain };
+
+        nodes.reverb = this._createReverb(ctx); nodes.reverb.connect(destinationNode);
+        nodes.carrier = this._createCarrierPair(ctx, initialStage);
+        nodes.carrier.outputLeft.connect(destinationNode); nodes.carrier.outputRight.connect(destinationNode);
+        nodes.carrier.outputLeft.connect(nodes.reverb); nodes.carrier.outputRight.connect(nodes.reverb);
+        nodes.pad = this._createPadLayer(ctx); nodes.pad.output.connect(destinationNode); nodes.pad.output.connect(nodes.reverb);
+
+        const creators = {
+            iso: this._createIsoLayer, noise: this._createPinkNoise, wind: this._createWindSound,
+            drum: this._createShamanicDrum, bowl: this._createSingingBowl, deepSleep: this._createDeepSleepBinaural,
+            brainPulse: this._createBrainPulse
+        };
+        
+        for (const config of this.app.toggleConfigs) {
+            const { nodeKey } = config;
+            if (!creators[nodeKey]) continue;
+
+            let node;
+            if (['brainPulse', 'drum'].includes(nodeKey)) node = await creators[nodeKey].call(this, ctx);
+            else if (['iso', 'deepSleep'].includes(nodeKey)) node = creators[nodeKey].call(this, ctx, initialStage);
+            else node = creators[nodeKey].call(this, ctx);
+            
+            const gainSwitch = ctx.createGain(); gainSwitch.gain.value = activeToggles[nodeKey] ? 1 : 0;
+            const output = node.output || node; output.connect(gainSwitch);
+            gainSwitch.connect(effectsGain);
+            if(!['deepSleep', 'brainPulse'].includes(nodeKey)) gainSwitch.connect(nodes.reverb);
+            nodes[nodeKey] = { ...node, gainSwitch, source: output };
+        }
+        return nodes;
+    },
+    
+    // --- Autoplay ---
+    tickAutoplay() {
+        const now = performance.now();
+        const delta = (now - this.app.state.lastTickTime) / 1000;
+        this.app.state.lastTickTime = now;
+        this.app.state.sessionElapsedTime += delta;
+        
+        const totalDur = parseInt(this.app.ui.lengthSlider.value, 10) * 60;
+        if (this.app.state.sessionElapsedTime >= totalDur) {
+            this.stop(); return;
+        }
+        
+        const stageDur = totalDur / this.app.state.STAGES.length;
+        const expectedStage = Math.floor(this.app.state.sessionElapsedTime / stageDur);
+
+        if (expectedStage < this.app.state.STAGES.length && expectedStage !== this.app.state.currentStage) {
+            const stageRecipe = this.app.state.STAGES[expectedStage];
+            this.setStage(stageRecipe);
+        }
+    },
+ },
+};
+ 
+ // --- Global Scope ---
+ const appController = {
+    ...app,
+    soundEngine: { ...app.soundEngine },
+    
+    startAuto() {
+        this.stopAuto();
+        this.state.lastTickTime = performance.now();
+        this.state.autoplayInterval = setInterval(this.soundEngine.tickAutoplay.bind(this.soundEngine), this.config.AUTOPLAY_TICK_MS);
+    },
+
+    stopAuto() {
+        clearInterval(this.state.autoplayInterval);
+        this.state.autoplayInterval = null;
+    }
+ };
+ appController.soundEngine.app = appController; // Provide reference for tickAutoplay
+
+ window.onload = () => appController.init();
 </script>
 </body>
 </html>
