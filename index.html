@@ -6,6 +6,7 @@
  <title>Binaural Beats & Sound Therapy for Focus, Meditation & Sleep</title>
  <meta name="theme-color" content="#d4a017">
  <link rel="manifest" href="manifest.json" crossOrigin="use-credentials">
+ <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OTYgNDk2Ij48Y2lyY2xlIGN4PSIyNTIuMSIgY3k9IjI0Ni42IiByPSIyNDEuMiIgZmlsbD0iI2EyMDA4YSIvPjxlbGxpcHNlIGN4PSIxNzYuMyIgY3k9IjE3NyIgZmlsbD0iI2ViZmYzZiIgcng9IjcwLjYiIHJ5PSI2Ni45Ii8+PHBhdGggZmlsbD0iI2ViZmYzZiIgZD0iTTMwMiAxODNoOTd2MzdoLTk3eiIvPjxwYXRoIGZpbGw9IiNlYmZmM2YiIHN0cm9rZT0iI2ViZmYzZiIgc3Ryb2tlLXdpZHRoPSIyNS45IiBkPSJNMTExIDMwOGM3MiA5MCAxNjcgMTE1IDI1MiA2OSIvPjwvc3ZnPg==">
  <style>
  :root {
  --bg: #1a120b;
@@ -402,10 +403,10 @@
  }
  }
  
-  @media (min-width: 64rem) { /* 1024px */
-   .main-container {
-     max-width: 60rem; /* Add a max-width for very large screens */
-   }
+ @media (min-width: 64rem) { /* 1024px */
+ .main-container {
+ max-width: 60rem; /* Add a max-width for very large screens */
+ }
  }
  
  .play-icon {
@@ -492,8 +493,8 @@
  }
 
  #install-instructions ul svg {
-     width: 1em;
-     height: 1em;
+ width: 1em;
+ height: 1em;
  }
  </style>
 </head>
@@ -709,20 +710,21 @@
  relaxation: { stages: [{name:'Relax', base:120, beat:8.0, padCut:1000, iso:4.0, noise:0.03}, {name:'Deep Calm', base:80, beat:6.0, padCut:700, iso:2.0, noise:0.01}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.4 },
  deep_sleep: { stages: [{name:'Delta Wave', base:100, beat:2.0, padCut:250, iso:0.8, noise:0.05}, {name:'Deep Delta', base:100, beat:0.5, padCut:150, iso:0.5, noise:0.08}, {name:'3D Delta', base:110, beat:1.5, padCut:100, iso:0.3, noise:0.0, deepSleepOn: true}], toggles: { iso: true, noise: true, wind: false, drum: false, bowl: false, deepSleep: true, metalPulse: false }, intensity: 0.3 },
  rem_sleep: {
-    stages: [
-        {name:'Alpha Relaxation', base:120, beat:10.0, padCut:900, iso:5.0, noise:0.03, deepSleepOn: false},
-        {name:'Theta Transition', base:90, beat:6.0, padCut:600, iso:3.0, noise:0.04, deepSleepOn: true},
-        {name:'Delta Deep Sleep', base:80, beat:2.0, padCut:300, iso:1.0, noise:0.05, deepSleepOn: true},
-        {name:'REM Phase', base:100, beat:4.5, padCut:400, iso:2.5, noise:0.04, deepSleepOn: true}
-    ],
-    toggles: { iso: true, noise: true, wind: false, drum: false, bowl: true, deepSleep: true, metalPulse: false },
-    intensity: 0.25
+ stages: [
+ {name:'Alpha Relaxation', base:120, beat:10.0, padCut:900, iso:5.0, noise:0.03, deepSleepOn: false},
+ {name:'Theta Transition', base:90, beat:6.0, padCut:600, iso:3.0, noise:0.04, deepSleepOn: true},
+ {name:'Delta Deep Sleep', base:80, beat:2.0, padCut:300, iso:1.0, noise:0.05, deepSleepOn: true},
+ {name:'REM Phase', base:100, beat:4.5, padCut:400, iso:2.5, noise:0.04, deepSleepOn: true}
+ ],
+ toggles: { iso: true, noise: true, wind: false, drum: false, bowl: true, deepSleep: true, metalPulse: false },
+ intensity: 0.25
  },
  energetic: { stages: [{name:'Energetic', base:95, beat:6.5, padCut:1200, iso:4.5, noise:0.095}], toggles: { iso: true, noise: true, wind: true, drum: true, bowl: false, deepSleep: false, metalPulse: false }, intensity: 0.6 },
  bliss: { stages: [{name:'Bliss', base:240, beat:40.0, padCut:4800, iso:0.8, noise:0.02}], toggles: { iso: true, noise: true, wind: true, drum: false, bowl: true, deepSleep: false, metalPulse: false }, intensity: 0.7 }
  },
 
  config: {
+ APP_NAME: 'Binaural Beats & Sound Therapy',
  MASTER_GAIN_MULTIPLIER: 0.45,
  PAD_GAIN_MULTIPLIER: 0.6,
  DEEP_SLEEP_GAIN_MULTIPLIER: 0.15,
@@ -771,13 +773,13 @@
 
  // --- Core Methods ---
  debounce(func, delay) {
-    let timeoutId;
-    return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-            func.apply(this, args);
-        }, delay);
-    };
+ let timeoutId;
+ return function(...args) {
+ clearTimeout(timeoutId);
+ timeoutId = setTimeout(() => {
+ func.apply(this, args);
+ }, delay);
+ };
  },
  
  init() {
@@ -816,34 +818,74 @@
  this.ui.presetSelector.addEventListener('change', this.debounce(this.handlePresetChange.bind(this), 100));
  
  this.toggleConfigs.forEach(config => {
-    this.ui[config.optionId].addEventListener('click', this.debounce(() => {
-        this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
-    }, 50));
+ this.ui[config.optionId].addEventListener('click', this.debounce(() => {
+ this.handleToggle(config.stateKey, this.ui[config.optionId], this.ui[config.chkId], config.nodeKey);
+ }, 50));
  });
  
  this.initUIState();
+ this.setupMediaSessionHandlers();
+ },
+
+ // --- Media Session API ---
+ setupMediaSessionHandlers() {
+ if (!('mediaSession' in navigator)) {
+ return;
+ }
+
+ navigator.mediaSession.setActionHandler('play', this.handlePlayPause.bind(this));
+ navigator.mediaSession.setActionHandler('pause', this.handlePlayPause.bind(this));
+ navigator.mediaSession.setActionHandler('nexttrack', this.goToNextStage.bind(this));
+ navigator.mediaSession.setActionHandler('previoustrack', this.goToPreviousStage.bind(this));
+ },
+
+ updateMediaSessionMetadata(idx) {
+ if (!('mediaSession' in navigator)) {
+ return;
+ }
+
+ if (idx < 0 || this.state.STAGES.length === 0) {
+ navigator.mediaSession.metadata = null;
+ return;
+ }
+ 
+ const stage = this.state.STAGES[idx];
+ const presetSelector = this.ui.presetSelector;
+ const presetName = presetSelector.options[presetSelector.selectedIndex].text;
+ 
+ const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496"><circle cx="252.1" cy="246.6" r="241.2" fill="#a2008a"/><ellipse cx="176.3" cy="177" fill="#ebff3f" rx="70.6" ry="66.9"/><path fill="#ebff3f" d="M302 183h97v37h-97z"/><path fill="#ebff3f" stroke="#ebff3f" stroke-width="25.9" d="M111 308c72 90 167 115 252 69"/></svg>`;
+ const iconUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`;
+
+ navigator.mediaSession.metadata = new MediaMetadata({
+ title: stage.name,
+ artist: this.config.APP_NAME,
+ album: `Preset: ${presetName}`,
+ artwork: [
+ { src: iconUrl, sizes: '496x496', type: 'image/svg+xml' }
+ ]
+ });
  },
  
  // --- PWA & Environment ---
  checkPWA() {
-    if (window.location.protocol === 'file:') {
-        this.ui.installAppBtn.style.display = 'none';
-        const p = document.createElement('p');
-        p.innerHTML = '<strong>Note:</strong> App installation is not available when running from a local file. Please use a web server (http or https).';
-        p.style.color = 'var(--accent)';
-        this.ui.installInstructions.prepend(p);
-    }
-    
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-         this.ui.installAppBtn.style.display = 'none';
-         this.ui.installInstructions.style.display = 'none';
-    }
+ if (window.location.protocol === 'file:') {
+ this.ui.installAppBtn.style.display = 'none';
+ const p = document.createElement('p');
+ p.innerHTML = '<strong>Note:</strong> App installation is not available when running from a local file. Please use a web server (http or https).';
+ p.style.color = 'var(--accent)';
+ this.ui.installInstructions.prepend(p);
+ }
+ 
+ if (window.matchMedia('(display-mode: standalone)').matches) {
+ this.ui.installAppBtn.style.display = 'none';
+ this.ui.installInstructions.style.display = 'none';
+ }
  },
 
  // --- Audio Engine ---
  createAudioContext() {
  if (this.audio.ctx) {
-     try { this.audio.ctx.close(); } catch(e) {}
+ try { this.audio.ctx.close(); } catch(e) {}
  }
  this.audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
  return this.audio.ctx;
@@ -952,410 +994,412 @@
  },
  
  createDrumWave(ctx) {
-    const numHarmonics = 32;
-    const real = new Float32Array(numHarmonics);
-    const imag = new Float32Array(numHarmonics);
-    real[0] = 0;
-    imag[0] = 0;
-    for (let i = 1; i < numHarmonics; ++i) {
-        if (i % 2 !== 0) { // Odd harmonics for a square-like wave
-            real[i] = ((-1) ** ((i - 1) / 2)) * (1 / (i * i));
-        } else {
-            real[i] = 0;
-        }
-        imag[i] = 0;
-    }
-    return ctx.createPeriodicWave(real, imag, { disableNormalization: true });
+ const numHarmonics = 32;
+ const real = new Float32Array(numHarmonics);
+ const imag = new Float32Array(numHarmonics);
+ real[0] = 0;
+ imag[0] = 0;
+ for (let i = 1; i < numHarmonics; ++i) {
+ if (i % 2 !== 0) { // Odd harmonics for a square-like wave
+ real[i] = ((-1) ** ((i - 1) / 2)) * (1 / (i * i));
+ } else {
+ real[i] = 0;
+ }
+ imag[i] = 0;
+ }
+ return ctx.createPeriodicWave(real, imag, { disableNormalization: true });
  },
 
  createShamanicDrum(ctx) {
-    const mainGain = ctx.createGain();
-    mainGain.gain.value = 0.7;
+ const mainGain = ctx.createGain();
+ mainGain.gain.value = 0.7;
 
-    const drumState = {
-        timeoutId: null,
-        nextBeatTime1: 0.0,
-        nextBeatTime2: 0.0,
-        customWave: this.createDrumWave(ctx),
-        drumFreq1: 40,
-        drumFreq2: 55,
-        patternPeriod: 10.0, // 6 BPM (60s / 10s)
-    };
+ const drumState = {
+ timeoutId: null,
+ nextBeatTime1: 0.0,
+ nextBeatTime2: 0.0,
+ customWave: this.createDrumWave(ctx),
+ drumFreq1: 40,
+ drumFreq2: 55,
+ patternPeriod: 10.0, // 6 BPM (60s / 10s)
+ };
 
-    const scheduleBeat = (frequency, time, decay, gain) => {
-        if (ctx.state !== 'running') return;
-        
-        const osc = ctx.createOscillator();
-        osc.setPeriodicWave(drumState.customWave);
-        
-        const freqVariation = (Math.random() - 0.5) * 2;
-        osc.frequency.value = frequency + freqVariation;
-        
-        const oscGain = ctx.createGain();
-        const lowpass = ctx.createBiquadFilter();
-        lowpass.type = 'lowpass';
-        lowpass.frequency.setValueAtTime(350, time);
-        lowpass.Q.value = 0.2;
+ const scheduleBeat = (frequency, time, decay, gain) => {
+ if (ctx.state !== 'running') return;
+ 
+ const osc = ctx.createOscillator();
+ osc.setPeriodicWave(drumState.customWave);
+ 
+ const freqVariation = (Math.random() - 0.5) * 2;
+ osc.frequency.value = frequency + freqVariation;
+ 
+ const oscGain = ctx.createGain();
+ const lowpass = ctx.createBiquadFilter();
+ lowpass.type = 'lowpass';
+ lowpass.frequency.setValueAtTime(350, time);
+ lowpass.Q.value = 0.2;
 
-        const panner = ctx.createStereoPanner();
-        
-        osc.connect(oscGain);
-        oscGain.connect(lowpass);
-        lowpass.connect(panner);
-        panner.connect(mainGain);
+ const panner = ctx.createStereoPanner();
+ 
+ osc.connect(oscGain);
+ oscGain.connect(lowpass);
+ lowpass.connect(panner);
+ panner.connect(mainGain);
 
-        const gainVariation = (Math.random() - 0.5) * 0.2;
-        const finalGain = gain + gainVariation;
-        
-        oscGain.gain.setValueAtTime(0, time);
-        oscGain.gain.linearRampToValueAtTime(finalGain, time + 0.01);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-        
-        const panDuration = 25.0;
-        const panTarget = (Math.random() - 0.5) * 1.8;
-        panner.pan.setValueAtTime(0, time);
-        panner.pan.linearRampToValueAtTime(panTarget, time + panDuration);
+ const gainVariation = (Math.random() - 0.5) * 0.2;
+ const finalGain = gain + gainVariation;
+ 
+ oscGain.gain.setValueAtTime(0, time);
+ oscGain.gain.linearRampToValueAtTime(finalGain, time + 0.01);
+ oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+ 
+ const panDuration = 25.0;
+ const panTarget = (Math.random() - 0.5) * 1.8;
+ panner.pan.setValueAtTime(0, time);
+ panner.pan.linearRampToValueAtTime(panTarget, time + panDuration);
 
-        osc.start(time);
-        osc.stop(time + decay + 0.1);
-    };
+ osc.start(time);
+ osc.stop(time + decay + 0.1);
+ };
 
-    const scheduler = () => {
-        if (drumState.timeoutId === null) return;
+ const scheduler = () => {
+ if (drumState.timeoutId === null) return;
 
-        const now = ctx.currentTime;
-        const lookahead = 0.1;
+ const now = ctx.currentTime;
+ const lookahead = 0.1;
 
-        if (drumState.nextBeatTime1 < now + lookahead) {
-            scheduleBeat(drumState.drumFreq1, drumState.nextBeatTime1, 12.0, 0.65);
-            drumState.nextBeatTime1 += drumState.patternPeriod;
-        }
+ if (drumState.nextBeatTime1 < now + lookahead) {
+ scheduleBeat(drumState.drumFreq1, drumState.nextBeatTime1, 12.0, 0.65);
+ drumState.nextBeatTime1 += drumState.patternPeriod;
+ }
 
-        if (drumState.nextBeatTime2 < now + lookahead) {
-            scheduleBeat(drumState.drumFreq2, drumState.nextBeatTime2, 4.0, 0.45);
-            drumState.nextBeatTime2 += drumState.patternPeriod;
-        }
-        
-        drumState.timeoutId = setTimeout(scheduler, 25);
-    };
+ if (drumState.nextBeatTime2 < now + lookahead) {
+ scheduleBeat(drumState.drumFreq2, drumState.nextBeatTime2, 4.0, 0.45);
+ drumState.nextBeatTime2 += drumState.patternPeriod;
+ }
+ 
+ drumState.timeoutId = setTimeout(scheduler, 25);
+ };
 
-    const startLoop = () => {
-        if (drumState.timeoutId !== null) return;
-        drumState.nextBeatTime1 = ctx.currentTime;
-        drumState.nextBeatTime2 = ctx.currentTime;
-        drumState.timeoutId = setTimeout(scheduler, 0);
-    };
-    
-    const stopLoop = () => {
-        if (drumState.timeoutId !== null) {
-            clearTimeout(drumState.timeoutId);
-            drumState.timeoutId = null;
-        }
-    };
-    
-    return { output: mainGain, gainNode: mainGain, startLoop, stopLoop };
+ const startLoop = () => {
+ if (drumState.timeoutId !== null) return;
+ drumState.nextBeatTime1 = ctx.currentTime;
+ drumState.nextBeatTime2 = ctx.currentTime;
+ drumState.timeoutId = setTimeout(scheduler, 0);
+ };
+ 
+ const stopLoop = () => {
+ if (drumState.timeoutId !== null) {
+ clearTimeout(drumState.timeoutId);
+ drumState.timeoutId = null;
+ }
+ };
+ 
+ return { output: mainGain, gainNode: mainGain, startLoop, stopLoop };
  },
 
  createSingingBowl(ctx) {
-    const baseFreq = 90;
-    const partials = [
-        { freq: baseFreq * 1,    gain: 1.0 },
-        { freq: baseFreq * 2.005, gain: 0.7 },
-        { freq: baseFreq * 3.42,  gain: 0.55 },
-        { freq: baseFreq * 4.0,   gain: 0.25 },
-        { freq: baseFreq * 5.71,  gain: 0.35 }
-    ];
+ const baseFreq = 90;
+ const partials = [
+ { freq: baseFreq * 1, gain: 1.0 },
+ { freq: baseFreq * 2.005, gain: 0.7 },
+ { freq: baseFreq * 3.42, gain: 0.55 },
+ { freq: baseFreq * 4.0, gain: 0.25 },
+ { freq: baseFreq * 5.71, gain: 0.35 }
+ ];
 
-    const mainGain = ctx.createGain();
-    mainGain.gain.value = 0.35; // It's a background effect.
+ const mainGain = ctx.createGain();
+ mainGain.gain.value = 0.35; // It's a background effect.
 
-    const panner = ctx.createStereoPanner();
-    mainGain.connect(panner);
+ const panner = ctx.createStereoPanner();
+ mainGain.connect(panner);
 
-    const panLFO = ctx.createOscillator();
-    panLFO.type = 'sine';
-    panLFO.frequency.value = 0.025; // Slow pan
-    const panMod = ctx.createGain();
-    panMod.gain.value = 0.9; // Wide pan
-    panLFO.connect(panMod);
-    panMod.connect(panner.pan);
-    panLFO.start();
+ const panLFO = ctx.createOscillator();
+ panLFO.type = 'sine';
+ panLFO.frequency.value = 0.025; // Slow pan
+ const panMod = ctx.createGain();
+ panMod.gain.value = 0.9; // Wide pan
+ panLFO.connect(panMod);
+ panMod.connect(panner.pan);
+ panLFO.start();
 
-    const envelope = ctx.createGain();
-    envelope.gain.value = 0.0;
-    envelope.connect(mainGain);
+ const envelope = ctx.createGain();
+ envelope.gain.value = 0.0;
+ envelope.connect(mainGain);
 
-    partials.forEach(p => {
-        const osc = ctx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.value = p.freq;
+ partials.forEach(p => {
+ const osc = ctx.createOscillator();
+ osc.type = 'sine';
+ osc.frequency.value = p.freq;
 
-        const vibLFO = ctx.createOscillator();
-        vibLFO.type = 'sine';
-        vibLFO.frequency.value = 2.5 + Math.random() * 2;
-        const vibDepth = ctx.createGain();
-        vibDepth.gain.value = p.freq * 0.004;
-        vibLFO.connect(vibDepth);
-        vibDepth.connect(osc.frequency);
-        
-        const partialGain = ctx.createGain();
-        partialGain.gain.value = p.gain;
-        
-        osc.connect(partialGain);
-        partialGain.connect(envelope);
-        
-        osc.start();
-        vibLFO.start();
-    });
+ const vibLFO = ctx.createOscillator();
+ vibLFO.type = 'sine';
+ vibLFO.frequency.value = 2.5 + Math.random() * 2;
+ const vibDepth = ctx.createGain();
+ vibDepth.gain.value = p.freq * 0.004;
+ vibLFO.connect(vibDepth);
+ vibDepth.connect(osc.frequency);
+ 
+ const partialGain = ctx.createGain();
+ partialGain.gain.value = p.gain;
+ 
+ osc.connect(partialGain);
+ partialGain.connect(envelope);
+ 
+ osc.start();
+ vibLFO.start();
+ });
 
-    let intervalId = null;
-    const trigger = (time) => {
-        try {
-            envelope.gain.cancelScheduledValues(time);
-            envelope.gain.setValueAtTime(0, time);
-            envelope.gain.linearRampToValueAtTime(1.0, time + 0.2); // Softer attack
-            envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, time + 45); // 45s decay
-        } catch(e) {
-            console.error("Error scheduling singing bowl:", e);
-        }
-    };
-    
-    const startLoop = () => {
-        if (intervalId) clearInterval(intervalId);
-        // Trigger immediately on play, then every 60s
-        trigger(ctx.currentTime);
-        intervalId = setInterval(() => {
-            if (ctx.state === 'running') {
-                trigger(ctx.currentTime);
-            }
-        }, 60000);
-    };
+ let intervalId = null;
+ const trigger = (time) => {
+ try {
+ envelope.gain.cancelScheduledValues(time);
+ envelope.gain.setValueAtTime(0, time);
+ envelope.gain.linearRampToValueAtTime(1.0, time + 0.2); // Softer attack
+ envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, time + 45); // 45s decay
+ } catch(e) {
+ console.error("Error scheduling singing bowl:", e);
+ }
+ };
+ 
+ const startLoop = () => {
+ if (intervalId) clearInterval(intervalId);
+ // Trigger immediately on play, then every 60s
+ trigger(ctx.currentTime);
+ intervalId = setInterval(() => {
+ if (ctx.state === 'running') {
+ trigger(ctx.currentTime);
+ }
+ }, 60000);
+ };
 
-    const stopLoop = () => {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = null;
-        envelope.gain.cancelScheduledValues(ctx.currentTime);
-        envelope.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
-    };
+ const stopLoop = () => {
+ if (intervalId) clearInterval(intervalId);
+ intervalId = null;
+ envelope.gain.cancelScheduledValues(ctx.currentTime);
+ envelope.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
+ };
 
-    return { output: panner, gainNode: mainGain, trigger, startLoop, stopLoop, envelope };
+ return { output: panner, gainNode: mainGain, trigger, startLoop, stopLoop, envelope };
  },
 
  createDeepSleepBinaural(ctx, initialStage) {
-    const leftOsc = ctx.createOscillator(), rightOsc = ctx.createOscillator();
-    leftOsc.type = rightOsc.type = 'sine';
-    const initialBase = initialStage.base;
-    const initialBeat = initialStage.beat;
-    leftOsc.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
-    rightOsc.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
-    leftOsc.start(); rightOsc.start();
-    
-    const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
-    const masterGain = ctx.createGain(); masterGain.gain.value = this.config.DEEP_SLEEP_GAIN_MULTIPLIER;
-    const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
-    volumeLFO.connect(volGainMod); volGainMod.connect(masterGain.gain);
-    const leftPanner = ctx.createStereoPanner(), rightPanner = ctx.createStereoPanner();
-    const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.015; panLFO.start();
+ const leftOsc = ctx.createOscillator(), rightOsc = ctx.createOscillator();
+ leftOsc.type = rightOsc.type = 'sine';
+ const initialBase = initialStage.base;
+ const initialBeat = initialStage.beat;
+ leftOsc.frequency.setValueAtTime(Math.max(8, initialBase - initialBeat / 2), ctx.currentTime);
+ rightOsc.frequency.setValueAtTime(Math.max(8, initialBase + initialBeat / 2), ctx.currentTime);
+ leftOsc.start(); rightOsc.start();
+ 
+ const volumeLFO = ctx.createOscillator(); volumeLFO.type = 'sine'; volumeLFO.frequency.value = 0.08; volumeLFO.start();
+ const masterGain = ctx.createGain(); masterGain.gain.value = this.config.DEEP_SLEEP_GAIN_MULTIPLIER;
+ const volGainMod = ctx.createGain(); volGainMod.gain.value = 0.1;
+ volumeLFO.connect(volGainMod); volGainMod.connect(masterGain.gain);
+ const leftPanner = ctx.createStereoPanner(), rightPanner = ctx.createStereoPanner();
+ const panLFO = ctx.createOscillator(); panLFO.type = 'sine'; panLFO.frequency.value = 0.015; panLFO.start();
 
-    const panMod = ctx.createGain();
-    panMod.gain.value = 1.0;
-    const panInverter = ctx.createGain();
-    panInverter.gain.value = -1;
-    
-    panLFO.connect(panMod);
-    panMod.connect(leftPanner.pan);
-    panMod.connect(panInverter);
-    panInverter.connect(rightPanner.pan);
-    
-    leftOsc.connect(leftPanner); rightOsc.connect(rightPanner);
-    const merger = ctx.createChannelMerger(2);
-    leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1);
-    merger.connect(masterGain);
-    return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat, when = ctx.currentTime, ramp = this.config.STAGE_CHANGE_RAMP_S) => {
-        const newLeftFreq = Math.max(8, base - beat / 2);
-        const newRightFreq = Math.max(8, base + beat / 2);
-        leftOsc.frequency.linearRampToValueAtTime(newLeftFreq, when + ramp);
-        rightOsc.frequency.linearRampToValueAtTime(newRightFreq, when + ramp);
-    }
-    };
+ const panMod = ctx.createGain();
+ panMod.gain.value = 1.0;
+ const panInverter = ctx.createGain();
+ panInverter.gain.value = -1;
+ 
+ panLFO.connect(panMod);
+ panMod.connect(leftPanner.pan);
+ panMod.connect(panInverter);
+ panInverter.connect(rightPanner.pan);
+ 
+ leftOsc.connect(leftPanner); rightOsc.connect(rightPanner);
+ const merger = ctx.createChannelMerger(2);
+ leftPanner.connect(merger, 0, 0); rightPanner.connect(merger, 0, 1);
+ merger.connect(masterGain);
+ return { output: masterGain, gainNode: masterGain, leftOsc, rightOsc, setBinaural: (base, beat, when = ctx.currentTime, ramp = this.config.STAGE_CHANGE_RAMP_S) => {
+ const newLeftFreq = Math.max(8, base - beat / 2);
+ const newRightFreq = Math.max(8, base + beat / 2);
+ leftOsc.frequency.linearRampToValueAtTime(newLeftFreq, when + ramp);
+ rightOsc.frequency.linearRampToValueAtTime(newRightFreq, when + ramp);
+ }
+ };
  },
  
  async createMetalPulse(ctx) {
-    const LOOP_DURATION_S = 15;
-    const sampleRate = ctx.sampleRate;
-    const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * sampleRate), sampleRate);
-    
-    const masterOutput = offlineCtx.createGain();
-    const compressor = offlineCtx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-24, 0);
-    compressor.knee.setValueAtTime(30, 0);
-    compressor.ratio.setValueAtTime(12, 0);
-    compressor.attack.setValueAtTime(0.003, 0);
-    compressor.release.setValueAtTime(0.25, 0);
-    masterOutput.connect(compressor);
-    compressor.connect(offlineCtx.destination);
+ const LOOP_DURATION_S = 15;
+ const sampleRate = ctx.sampleRate;
+ const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(LOOP_DURATION_S * sampleRate), sampleRate);
+ 
+ const masterOutput = offlineCtx.createGain();
+ const compressor = offlineCtx.createDynamicsCompressor();
+ compressor.threshold.setValueAtTime(-24, 0);
+ compressor.knee.setValueAtTime(30, 0);
+ compressor.ratio.setValueAtTime(12, 0);
+ compressor.attack.setValueAtTime(0.003, 0);
+ compressor.release.setValueAtTime(0.25, 0);
+ masterOutput.connect(compressor);
+ compressor.connect(offlineCtx.destination);
 
-    const mainOscillator = offlineCtx.createOscillator();
-    const tremoloGain = offlineCtx.createGain();
-    const volumeRampGain = offlineCtx.createGain();
-    const pannerNode = offlineCtx.createStereoPanner();
-    const lfoOscillator = offlineCtx.createOscillator();
-    const pannerLFO = offlineCtx.createOscillator();
-    const chorusOscillator1 = offlineCtx.createOscillator();
-    const chorusOscillator2 = offlineCtx.createOscillator();
-    const chorusGain1 = offlineCtx.createGain();
-    const chorusGain2 = offlineCtx.createGain();
+ const mainOscillator = offlineCtx.createOscillator();
+ const tremoloGain = offlineCtx.createGain();
+ const volumeRampGain = offlineCtx.createGain();
+ const pannerNode = offlineCtx.createStereoPanner();
+ const lfoOscillator = offlineCtx.createOscillator();
+ const pannerLFO = offlineCtx.createOscillator();
+ const chorusOscillator1 = offlineCtx.createOscillator();
+ const chorusOscillator2 = offlineCtx.createOscillator();
+ const chorusGain1 = offlineCtx.createGain();
+ const chorusGain2 = offlineCtx.createGain();
 
-    mainOscillator.type = 'sine';
-    mainOscillator.frequency.value = 55;
-    lfoOscillator.type = 'sine';
-    lfoOscillator.frequency.value = 4;
-    pannerLFO.type = 'sine';
-    pannerLFO.frequency.value = 0.1;
-    chorusOscillator1.type = chorusOscillator2.type = 'sine';
-    chorusOscillator1.frequency.value = 55 * 0.5;
-    chorusOscillator2.frequency.value = 55 * 0.5;
-    
-    volumeRampGain.gain.value = 0;
-    chorusGain1.gain.value = 0;
-    chorusGain2.gain.value = 0;
-    tremoloGain.gain.value = 0.5;
+ mainOscillator.type = 'sine';
+ mainOscillator.frequency.value = 55;
+ lfoOscillator.type = 'sine';
+ lfoOscillator.frequency.value = 4;
+ pannerLFO.type = 'sine';
+ pannerLFO.frequency.value = 0.1;
+ chorusOscillator1.type = chorusOscillator2.type = 'sine';
+ chorusOscillator1.frequency.value = 55 * 0.5;
+ chorusOscillator2.frequency.value = 55 * 0.5;
+ 
+ volumeRampGain.gain.value = 0;
+ chorusGain1.gain.value = 0;
+ chorusGain2.gain.value = 0;
+ tremoloGain.gain.value = 0.5;
 
-    mainOscillator.connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
-    lfoOscillator.connect(tremoloGain).connect(volumeRampGain.gain);
-    pannerLFO.connect(pannerNode.pan);
-    chorusOscillator1.connect(chorusGain1).connect(masterOutput);
-    chorusOscillator2.connect(chorusGain2).connect(masterOutput);
+ mainOscillator.connect(volumeRampGain).connect(pannerNode).connect(masterOutput);
+ lfoOscillator.connect(tremoloGain).connect(volumeRampGain.gain);
+ pannerLFO.connect(pannerNode.pan);
+ chorusOscillator1.connect(chorusGain1).connect(masterOutput);
+ chorusOscillator2.connect(chorusGain2).connect(masterOutput);
 
-    const now = 0;
-    const endTime = now + LOOP_DURATION_S;
+ const now = 0;
+ const endTime = now + LOOP_DURATION_S;
 
-    mainOscillator.frequency.setValueAtTime(55, now);
-    mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
-    volumeRampGain.gain.setValueAtTime(1.0, now);
-    volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
-    lfoOscillator.frequency.setValueAtTime(4, now);
-    lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
-    chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
-    chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
-    chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
-    chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
-    chorusGain1.gain.setValueAtTime(0.05, now);
-    chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
-    chorusGain2.gain.setValueAtTime(0.05, now);
-    chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
+ mainOscillator.frequency.setValueAtTime(55, now);
+ mainOscillator.frequency.linearRampToValueAtTime(20, endTime);
+ volumeRampGain.gain.setValueAtTime(1.0, now);
+ volumeRampGain.gain.linearRampToValueAtTime(0.2, endTime);
+ lfoOscillator.frequency.setValueAtTime(4, now);
+ lfoOscillator.frequency.linearRampToValueAtTime(1, endTime);
+ chorusOscillator1.frequency.setValueAtTime(55 * 0.5, now);
+ chorusOscillator1.frequency.linearRampToValueAtTime(20, endTime);
+ chorusOscillator2.frequency.setValueAtTime(55 * 0.5, now);
+ chorusOscillator2.frequency.linearRampToValueAtTime(20, endTime);
+ chorusGain1.gain.setValueAtTime(0.05, now);
+ chorusGain1.gain.linearRampToValueAtTime(0.3, endTime);
+ chorusGain2.gain.setValueAtTime(0.05, now);
+ chorusGain2.gain.linearRampToValueAtTime(0.3, endTime);
 
-    mainOscillator.start(now);
-    lfoOscillator.start(now);
-    pannerLFO.start(now);
-    chorusOscillator1.start(now);
-    chorusOscillator2.start(now);
-    
-    const renderedBuffer = await offlineCtx.startRendering();
-    
-    const source = ctx.createBufferSource();
-    source.buffer = renderedBuffer;
-    source.loop = true;
-    source.start();
+ mainOscillator.start(now);
+ lfoOscillator.start(now);
+ pannerLFO.start(now);
+ chorusOscillator1.start(now);
+ chorusOscillator2.start(now);
+ 
+ const renderedBuffer = await offlineCtx.startRendering();
+ 
+ const source = ctx.createBufferSource();
+ source.buffer = renderedBuffer;
+ source.loop = true;
+ source.start();
 
-    return { output: source };
+ return { output: source };
  },
 
  async createAudioGraph(ctx, initialStage) {
-    const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0, ctx.currentTime);
-    masterGain.connect(ctx.destination);
-    
-    const effectsGain = ctx.createGain();
-    effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
-    effectsGain.connect(masterGain);
-    
-    const nodes = { masterGain, effectsGain };
+ const masterGain = ctx.createGain();
+ masterGain.gain.setValueAtTime(0, ctx.currentTime);
+ masterGain.connect(ctx.destination);
+ 
+ const effectsGain = ctx.createGain();
+ effectsGain.gain.value = parseFloat(this.ui.intensitySlider.value);
+ effectsGain.connect(masterGain);
+ 
+ const nodes = { masterGain, effectsGain };
 
-    nodes.reverb = this.createReverb(ctx);
-    nodes.reverb.connect(masterGain);
-    
-    nodes.carrier = this.createCarrierPair(ctx, initialStage);
-    nodes.carrier.outputLeft.connect(masterGain);
-    nodes.carrier.outputRight.connect(masterGain);
-    nodes.carrier.outputLeft.connect(nodes.reverb);
-    nodes.carrier.outputRight.connect(nodes.reverb);
-    
-    nodes.pad = this.createPadLayer(ctx);
-    nodes.pad.output.connect(masterGain);
-    nodes.pad.output.connect(nodes.reverb);
+ nodes.reverb = this.createReverb(ctx);
+ nodes.reverb.connect(masterGain);
+ 
+ nodes.carrier = this.createCarrierPair(ctx, initialStage);
+ nodes.carrier.outputLeft.connect(masterGain);
+ nodes.carrier.outputRight.connect(masterGain);
+ nodes.carrier.outputLeft.connect(nodes.reverb);
+ nodes.carrier.outputRight.connect(nodes.reverb);
+ 
+ nodes.pad = this.createPadLayer(ctx);
+ nodes.pad.output.connect(masterGain);
+ nodes.pad.output.connect(nodes.reverb);
 
-    const creators = {
-        iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
-        drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural,
-        metalPulse: this.createMetalPulse
-    };
-    
-    for (const config of this.toggleConfigs) {
-        const { stateKey, nodeKey } = config;
-        if (!creators[nodeKey]) continue;
+ const creators = {
+ iso: this.createIsoLayer, noise: this.createPinkNoise, wind: this.createWindSound,
+ drum: this.createShamanicDrum, bowl: this.createSingingBowl, deepSleep: this.createDeepSleepBinaural,
+ metalPulse: this.createMetalPulse
+ };
+ 
+ for (const config of this.toggleConfigs) {
+ const { stateKey, nodeKey } = config;
+ if (!creators[nodeKey]) continue;
 
-        let node;
-        if (nodeKey === 'metalPulse') {
-            node = await creators[nodeKey].call(this, ctx);
-        } else if (nodeKey === 'iso' || nodeKey === 'deepSleep') {
-            node = creators[nodeKey].call(this, ctx, initialStage);
-        } else {
-            node = creators[nodeKey].call(this, ctx);
-        }
-        
-        const gainSwitch = ctx.createGain();
-        gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
-        
-        const output = node.output || node;
-        output.connect(gainSwitch);
-        gainSwitch.connect(effectsGain);
-        if(nodeKey !== 'deepSleep' && nodeKey !== 'metalPulse') gainSwitch.connect(nodes.reverb);
+ let node;
+ if (nodeKey === 'metalPulse') {
+ node = await creators[nodeKey].call(this, ctx);
+ } else if (nodeKey === 'iso' || nodeKey === 'deepSleep') {
+ node = creators[nodeKey].call(this, ctx, initialStage);
+ } else {
+ node = creators[nodeKey].call(this, ctx);
+ }
+ 
+ const gainSwitch = ctx.createGain();
+ gainSwitch.gain.value = this.state[stateKey] ? 1 : 0;
+ 
+ const output = node.output || node;
+ output.connect(gainSwitch);
+ gainSwitch.connect(effectsGain);
+ if(nodeKey !== 'deepSleep' && nodeKey !== 'metalPulse') gainSwitch.connect(nodes.reverb);
 
-        nodes[nodeKey] = { ...node, gainSwitch, source: output };
-    }
-    
-    return nodes;
+ nodes[nodeKey] = { ...node, gainSwitch, source: output };
+ }
+ 
+ return nodes;
  },
 
  async buildEngine() {
-    const ctx = this.createAudioContext();
-    const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
-    const nodes = await this.createAudioGraph(ctx, initialStage);
-    
-    this.audio.ctx = ctx;
-    this.audio.nodes = nodes;
-    this.audio.masterGain = nodes.masterGain;
-    this.audio.effectsGain = nodes.effectsGain;
-    
-    this.setStage(0, ctx.currentTime, 0.1);
+ const ctx = this.createAudioContext();
+ const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+ const nodes = await this.createAudioGraph(ctx, initialStage);
+ 
+ this.audio.ctx = ctx;
+ this.audio.nodes = nodes;
+ this.audio.masterGain = nodes.masterGain;
+ this.audio.effectsGain = nodes.effectsGain;
+ 
+ this.setStage(0, ctx.currentTime, 0.1);
  },
 
  async startEngine(isNew = false) {
-    if (isNew || !this.audio.ctx || this.audio.ctx.state === 'closed') {
-        await this.buildEngine();
-    }
-    
-    try {
-        if (this.audio.ctx.state === 'suspended') {
-            await this.audio.ctx.resume();
-        }
-    } catch(e) { console.error("Error resuming AudioContext:", e); }
+ if (isNew || !this.audio.ctx || this.audio.ctx.state === 'closed') {
+ await this.buildEngine();
+ }
+ 
+ try {
+ if (this.audio.ctx.state === 'suspended') {
+ await this.audio.ctx.resume();
+ }
+ } catch(e) { console.error("Error resuming AudioContext:", e); }
 
-    const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
-    this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
-    this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
-    
-    this.updatePlayPauseButton('pause');
-    if (isNew) {
-        this.state.sessionElapsedTime = 0;
-    }
-    
-    // Start loops for any effects that are active by default for the preset
-    if (this.state.isBowlEnabled && this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
-    if (this.state.isDrumEnabled && this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
+ const gainValue = this.config.MASTER_GAIN_MULTIPLIER;
+ this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
+ this.audio.masterGain.gain.linearRampToValueAtTime(gainValue, this.audio.ctx.currentTime + this.config.RESUME_FADE_DURATION_S);
+ 
+ this.updatePlayPauseButton('pause');
+ if (isNew) {
+ this.state.sessionElapsedTime = 0;
+ this.updateMediaSessionMetadata(0);
+ }
+ if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+ 
+ // Start loops for any effects that are active by default for the preset
+ if (this.state.isBowlEnabled && this.audio.nodes.bowl) this.audio.nodes.bowl.startLoop();
+ if (this.state.isDrumEnabled && this.audio.nodes.drum) this.audio.nodes.drum.startLoop();
 
-    this.startAuto();
+ this.startAuto();
 },
 
  setStage(idx, when, ramp = this.config.STAGE_CHANGE_RAMP_S) {
@@ -1368,14 +1412,15 @@
  nodes.pad.setFilter(s.padCut, when, ramp);
  if (nodes.iso) nodes.iso.setRate(s.iso, when, ramp);
  if (nodes.noise) {
-    nodes.noise.source.gain.linearRampToValueAtTime(s.noise, when + ramp);
+ nodes.noise.source.gain.linearRampToValueAtTime(s.noise, when + ramp);
  }
  if (nodes.deepSleep) {
-    const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
-    nodes.deepSleep.setBinaural(s.base, s.beat, when, ramp);
-    nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
+ const targetGain = s.deepSleepOn ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : 0;
+ nodes.deepSleep.setBinaural(s.base, s.beat, when, ramp);
+ nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, when + ramp);
  }
  this.updateUIStage(idx);
+ this.updateMediaSessionMetadata(idx);
  },
 
  startAuto() {
@@ -1411,72 +1456,103 @@
  },
  
  async goToNextStage() {
-    if (this.state.isInteracting) return;
-    this.state.isInteracting = true;
-    try {
-        if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
-            await this.startEngine(true);
-            return;
-        }
+ if (this.state.isInteracting) return;
+ this.state.isInteracting = true;
+ try {
+ if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+ await this.startEngine(true);
+ return;
+ }
 
-        if (this.state.currentStage >= this.state.STAGES.length - 1) {
-            await this.stopEngine();
-            return;
-        }
+ if (this.state.currentStage >= this.state.STAGES.length - 1) {
+ await this.stopEngine();
+ return;
+ }
 
-        const nextStageIndex = this.state.currentStage + 1;
-        
-        const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
-        const stageDur = totalDur / this.state.STAGES.length;
-        this.state.sessionElapsedTime = nextStageIndex * stageDur;
-        
-        if(this.state.autoplayInterval) {
-            this.state.lastTickTime = performance.now();
-        }
-        
-        this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
+ const nextStageIndex = this.state.currentStage + 1;
+ 
+ const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
+ const stageDur = totalDur / this.state.STAGES.length;
+ this.state.sessionElapsedTime = nextStageIndex * stageDur;
+ 
+ if(this.state.autoplayInterval) {
+ this.state.lastTickTime = performance.now();
+ }
+ 
+ this.setStage(nextStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
 
-        if (this.audio.ctx.state === 'suspended') {
-            await this.startEngine(false);
-        }
-    } finally {
-        this.state.isInteracting = false;
-    }
+ if (this.audio.ctx.state === 'suspended') {
+ await this.startEngine(false);
+ }
+ } finally {
+ this.state.isInteracting = false;
+ }
+ },
+
+ async goToPreviousStage() {
+ if (this.state.isInteracting) return;
+ this.state.isInteracting = true;
+ try {
+ if (!this.audio.ctx || this.audio.ctx.state === 'closed' || this.state.currentStage <= 0) {
+ return; // Cannot go back if not playing or at the first stage
+ }
+
+ const prevStageIndex = this.state.currentStage - 1;
+ 
+ const totalDur = parseInt(this.ui.lengthSlider.value, 10) * 60;
+ const stageDur = totalDur / this.state.STAGES.length;
+ this.state.sessionElapsedTime = prevStageIndex * stageDur;
+ 
+ if(this.state.autoplayInterval) {
+ this.state.lastTickTime = performance.now();
+ }
+ 
+ this.setStage(prevStageIndex, this.audio.ctx.currentTime, this.config.STAGE_CHANGE_RAMP_S);
+
+ if (this.audio.ctx.state === 'suspended') {
+ await this.startEngine(false);
+ }
+ } finally {
+ this.state.isInteracting = false;
+ }
  },
 
  async stopEngine() {
-    if (!this.audio.ctx) return;
-    this.stopAuto();
-    if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
-    if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
-    this.state.sessionElapsedTime = 0;
+ if (!this.audio.ctx) return;
+ this.stopAuto();
+ if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
+ if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
+ this.state.sessionElapsedTime = 0;
 
-    try {
-        this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
-        this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.FADE_DURATION_S);
-    } catch(e) { console.error("Error stopping gain ramp:", e); }
+ try {
+ this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
+ this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.FADE_DURATION_S);
+ } catch(e) { console.error("Error stopping gain ramp:", e); }
 
-    return new Promise(resolve => {
-        setTimeout(() => {
-            try { if (this.audio.ctx && this.audio.ctx.state !== 'closed') this.audio.ctx.suspend(); }
-            catch(e) { console.error("Error suspending audio context:", e); }
-            this.state.currentStage = -1;
-            this.updatePlayPauseButton('play');
-            this.updateUIStage(-1);
-            resolve();
-        }, this.config.FADE_DURATION_S * 1000);
-    });
+ return new Promise(resolve => {
+ setTimeout(() => {
+ try { if (this.audio.ctx && this.audio.ctx.state !== 'closed') this.audio.ctx.suspend(); }
+ catch(e) { console.error("Error suspending audio context:", e); }
+ this.state.currentStage = -1;
+ this.updatePlayPauseButton('play');
+ this.updateUIStage(-1);
+ this.updateMediaSessionMetadata(-1);
+ if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+ resolve();
+ }, this.config.FADE_DURATION_S * 1000);
+ });
  },
 
  pauseEngine() {
  if (!this.audio.ctx || this.audio.ctx.state !== 'running') return;
  this.stopAuto();
+ if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
  if (this.audio.nodes.bowl) this.audio.nodes.bowl.stopLoop();
  if (this.audio.nodes.drum) this.audio.nodes.drum.stopLoop();
  this.audio.masterGain.gain.cancelScheduledValues(this.audio.ctx.currentTime);
  this.audio.masterGain.gain.linearRampToValueAtTime(this.config.MIN_GAIN, this.audio.ctx.currentTime + this.config.PAUSE_FADE_DURATION_S);
  setTimeout(() => {
-    if (this.audio.ctx && this.audio.ctx.state === 'running') this.audio.ctx.suspend();
+ if (this.audio.ctx && this.audio.ctx.state === 'running') this.audio.ctx.suspend();
  }, this.config.PAUSE_FADE_DURATION_S * 1000);
  },
  
@@ -1533,20 +1609,20 @@
  
  // --- Event Handlers ---
  async handlePlayPause() {
-    if (this.state.isInteracting) return;
-    this.state.isInteracting = true;
-    try {
-        if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
-            await this.startEngine(true);
-        } else if (this.audio.ctx.state === 'running') {
-            this.pauseEngine();
-            this.updatePlayPauseButton('play');
-        } else if (this.audio.ctx.state === 'suspended') {
-            await this.startEngine(false);
-        }
-    } finally {
-        this.state.isInteracting = false;
-    }
+ if (this.state.isInteracting) return;
+ this.state.isInteracting = true;
+ try {
+ if (!this.audio.ctx || this.audio.ctx.state === 'closed') {
+ await this.startEngine(true);
+ } else if (this.audio.ctx.state === 'running') {
+ this.pauseEngine();
+ this.updatePlayPauseButton('play');
+ } else if (this.audio.ctx.state === 'suspended') {
+ await this.startEngine(false);
+ }
+ } finally {
+ this.state.isInteracting = false;
+ }
  },
 
  handleIntensityChange(e) {
@@ -1560,159 +1636,159 @@
  },
 
  handleToggle(stateKey, button, checkmark, nodeKey) {
-    this.state[stateKey] = !this.state[stateKey];
-    this.toggleCheckmark(button, checkmark, this.state[stateKey]);
-    
-    if (this.audio.ctx && this.audio.nodes[nodeKey] && this.audio.nodes[nodeKey].gainSwitch) {
-        const node = this.audio.nodes[nodeKey];
-        const targetGain = this.state[stateKey] ? 1 : 0;
-        node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
-        
-        // Special handling for nodes with independent loops, only if engine is running
-        if (node.startLoop && node.stopLoop && this.audio.ctx.state === 'running') {
-             if (this.state[stateKey]) {
-                 node.startLoop();
-             } else {
-                 node.stopLoop();
-             }
-        }
-    }
+ this.state[stateKey] = !this.state[stateKey];
+ this.toggleCheckmark(button, checkmark, this.state[stateKey]);
+ 
+ if (this.audio.ctx && this.audio.nodes[nodeKey] && this.audio.nodes[nodeKey].gainSwitch) {
+ const node = this.audio.nodes[nodeKey];
+ const targetGain = this.state[stateKey] ? 1 : 0;
+ node.gainSwitch.gain.linearRampToValueAtTime(targetGain, this.audio.ctx.currentTime + 0.5);
+ 
+ // Special handling for nodes with independent loops, only if engine is running
+ if (node.startLoop && node.stopLoop && this.audio.ctx.state === 'running') {
+ if (this.state[stateKey]) {
+  node.startLoop();
+ } else {
+  node.stopLoop();
+ }
+ }
+ }
  },
 
  async handlePresetChange(e) {
-    if (this.state.isInteracting) return;
-    this.state.isInteracting = true;
-    try {
-        const presetName = e.target.value;
-        const preset = this.PRESETS[presetName];
-        if (!preset) return;
+ if (this.state.isInteracting) return;
+ this.state.isInteracting = true;
+ try {
+ const presetName = e.target.value;
+ const preset = this.PRESETS[presetName];
+ if (!preset) return;
 
-        this.state.STAGES = preset.stages;
-        this.updatePresetUI(preset);
-        
-        if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
-            await this.stopEngine();
-            await this.startEngine(true);
-        }
-        this.updateUIStage(-1);
-    } finally {
-        this.state.isInteracting = false;
-    }
+ this.state.STAGES = preset.stages;
+ this.updatePresetUI(preset);
+ 
+ if (this.audio.ctx && this.audio.ctx.state !== 'closed') {
+ await this.stopEngine();
+ await this.startEngine(true);
+ }
+ this.updateUIStage(-1);
+ } finally {
+ this.state.isInteracting = false;
+ }
  },
  
  handleSaveAudio() {
-    const btn = this.ui.saveAudioBtn;
-    btn.disabled = true;
-    btn.textContent = 'Generating... Please Wait';
+ const btn = this.ui.saveAudioBtn;
+ btn.disabled = true;
+ btn.textContent = 'Generating... Please Wait';
  
-    // Use a timeout to allow the UI to update before the heavy work starts
-    setTimeout(async () => {
-        try {
-            const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
-            const sampleRate = 44100;
+ // Use a timeout to allow the UI to update before the heavy work starts
+ setTimeout(async () => {
+ try {
+ const durationSeconds = parseInt(this.ui.lengthSlider.value, 10) * 60;
+ const sampleRate = 44100;
 
-            const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
-            const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
-            const nodes = await this.createAudioGraph(offlineCtx, initialStage);
+ const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sampleRate * durationSeconds, sampleRate);
+ const initialStage = this.state.STAGES[0] || this.PRESETS.none.stages[0];
+ const nodes = await this.createAudioGraph(offlineCtx, initialStage);
 
-            // --- Schedule all audio events for offline rendering ---
-            
-            // Set initial gain
-            nodes.masterGain.gain.setValueAtTime(this.config.MASTER_GAIN_MULTIPLIER, 0);
+ // --- Schedule all audio events for offline rendering ---
+ 
+ // Set initial gain
+ nodes.masterGain.gain.setValueAtTime(this.config.MASTER_GAIN_MULTIPLIER, 0);
 
-            // Schedule stage changes
-            const totalDur = durationSeconds;
-            const stageDur = totalDur / this.state.STAGES.length;
-            this.state.STAGES.forEach((stage, idx) => {
-                const startTime = idx * stageDur;
-                const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
+ // Schedule stage changes
+ const totalDur = durationSeconds;
+ const stageDur = totalDur / this.state.STAGES.length;
+ this.state.STAGES.forEach((stage, idx) => {
+ const startTime = idx * stageDur;
+ const rampTime = Math.min(this.config.STAGE_CHANGE_RAMP_S, stageDur * 0.5);
 
-                nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
-                nodes.pad.setFilter(stage.padCut, startTime, rampTime);
-                if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
-                if (nodes.noise) {
-                    const noiseGain = stage.noise;
-                    if (startTime === 0) nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
-                    else nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
-                }
-                if (nodes.deepSleep) {
-                    const leftFreq = Math.max(8, stage.base - stage.beat / 2);
-                    const rightFreq = Math.max(8, stage.base + stage.beat / 2);
-                    if (startTime === 0) {
-                        nodes.deepSleep.leftOsc.frequency.setValueAtTime(leftFreq, 0);
-                        nodes.deepSleep.rightOsc.frequency.setValueAtTime(rightFreq, 0);
-                    } else {
-                        nodes.deepSleep.leftOsc.frequency.linearRampToValueAtTime(leftFreq, startTime + rampTime);
-                        nodes.deepSleep.rightOsc.frequency.linearRampToValueAtTime(rightFreq, startTime + rampTime);
-                    }
-                    const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled) ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : this.config.MIN_GAIN;
-                    if (startTime === 0) nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
-                    else nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
-                }
-            });
+ nodes.carrier.setBinaural(stage.base, stage.beat, startTime, rampTime);
+ nodes.pad.setFilter(stage.padCut, startTime, rampTime);
+ if (nodes.iso) nodes.iso.setRate(stage.iso, startTime, rampTime);
+ if (nodes.noise) {
+  const noiseGain = stage.noise;
+  if (startTime === 0) nodes.noise.source.gain.setValueAtTime(noiseGain, 0);
+  else nodes.noise.source.gain.linearRampToValueAtTime(noiseGain, startTime + rampTime);
+ }
+ if (nodes.deepSleep) {
+  const leftFreq = Math.max(8, stage.base - stage.beat / 2);
+  const rightFreq = Math.max(8, stage.base + stage.beat / 2);
+  if (startTime === 0) {
+  nodes.deepSleep.leftOsc.frequency.setValueAtTime(leftFreq, 0);
+  nodes.deepSleep.rightOsc.frequency.setValueAtTime(rightFreq, 0);
+  } else {
+  nodes.deepSleep.leftOsc.frequency.linearRampToValueAtTime(leftFreq, startTime + rampTime);
+  nodes.deepSleep.rightOsc.frequency.linearRampToValueAtTime(rightFreq, startTime + rampTime);
+  }
+  const targetGain = (stage.deepSleepOn && this.state.isDeepSleepEnabled) ? this.config.DEEP_SLEEP_GAIN_MULTIPLIER : this.config.MIN_GAIN;
+  if (startTime === 0) nodes.deepSleep.gainNode.gain.setValueAtTime(targetGain, 0);
+  else nodes.deepSleep.gainNode.gain.linearRampToValueAtTime(targetGain, startTime + rampTime);
+ }
+ });
 
-            // Schedule singing bowl triggers
-            if (nodes.bowl && this.state.isBowlEnabled) {
-                for (let t = 0; t < durationSeconds; t += 60) {
-                    const envelope = nodes.bowl.envelope;
-                    envelope.gain.setValueAtTime(0, t);
-                    envelope.gain.linearRampToValueAtTime(1.0, t + 0.2);
-                    envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, t + 45);
-                }
-            }
-            
-            // Schedule shamanic drum beats
-            if (nodes.drum && this.state.isDrumEnabled) {
-                nodes.drum.source.gain.setValueAtTime(0.7, 0);
-                const customWave = this.createDrumWave(offlineCtx);
-                const scheduleOfflineBeat = (frequency, time, decay, gain) => {
-                    const osc = offlineCtx.createOscillator();
-                    osc.setPeriodicWave(customWave);
-                    osc.frequency.setValueAtTime(frequency, time);
-                    const oscGain = offlineCtx.createGain();
-                    const lowpass = offlineCtx.createBiquadFilter();
-                    lowpass.type = 'lowpass';
-                    lowpass.frequency.setValueAtTime(350, time);
-                    lowpass.Q.value = 0.2;
-                    const panner = offlineCtx.createStereoPanner();
-                    osc.connect(oscGain); oscGain.connect(lowpass); lowpass.connect(panner); panner.connect(nodes.drum.source);
-                    oscGain.gain.setValueAtTime(0, time);
-                    oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
-                    oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-                    panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
-                    osc.start(time);
-                    osc.stop(time + decay + 0.1);
-                };
-                const patternPeriod = 10.0;
-                for (let t = 0; t < durationSeconds; t += patternPeriod) {
-                    scheduleOfflineBeat(40, t, 12.0, 0.65);
-                    scheduleOfflineBeat(55, t, 4.0, 0.45);
-                }
-            }
+ // Schedule singing bowl triggers
+ if (nodes.bowl && this.state.isBowlEnabled) {
+ for (let t = 0; t < durationSeconds; t += 60) {
+  const envelope = nodes.bowl.envelope;
+  envelope.gain.setValueAtTime(0, t);
+  envelope.gain.linearRampToValueAtTime(1.0, t + 0.2);
+  envelope.gain.exponentialRampToValueAtTime(this.config.MIN_GAIN, t + 45);
+ }
+ }
+ 
+ // Schedule shamanic drum beats
+ if (nodes.drum && this.state.isDrumEnabled) {
+ nodes.drum.source.gain.setValueAtTime(0.7, 0);
+ const customWave = this.createDrumWave(offlineCtx);
+ const scheduleOfflineBeat = (frequency, time, decay, gain) => {
+  const osc = offlineCtx.createOscillator();
+  osc.setPeriodicWave(customWave);
+  osc.frequency.setValueAtTime(frequency, time);
+  const oscGain = offlineCtx.createGain();
+  const lowpass = offlineCtx.createBiquadFilter();
+  lowpass.type = 'lowpass';
+  lowpass.frequency.setValueAtTime(350, time);
+  lowpass.Q.value = 0.2;
+  const panner = offlineCtx.createStereoPanner();
+  osc.connect(oscGain); oscGain.connect(lowpass); lowpass.connect(panner); panner.connect(nodes.drum.source);
+  oscGain.gain.setValueAtTime(0, time);
+  oscGain.gain.linearRampToValueAtTime(gain, time + 0.01);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+  panner.pan.setValueAtTime(Math.sin(time * 0.04), time);
+  osc.start(time);
+  osc.stop(time + decay + 0.1);
+ };
+ const patternPeriod = 10.0;
+ for (let t = 0; t < durationSeconds; t += patternPeriod) {
+  scheduleOfflineBeat(40, t, 12.0, 0.65);
+  scheduleOfflineBeat(55, t, 4.0, 0.45);
+ }
+ }
 
-            // Render the audio
-            const renderedBuffer = await offlineCtx.startRendering();
+ // Render the audio
+ const renderedBuffer = await offlineCtx.startRendering();
 
-            btn.textContent = 'Encoding WAV...';
-            const wavBlob = this.bufferToWav(renderedBuffer);
-            const url = URL.createObjectURL(wavBlob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
+ btn.textContent = 'Encoding WAV...';
+ const wavBlob = this.bufferToWav(renderedBuffer);
+ const url = URL.createObjectURL(wavBlob);
+ const a = document.createElement('a');
+ a.style.display = 'none';
+ a.href = url;
+ a.download = `binaural-soundscape-${this.ui.presetSelector.value}-${this.ui.lengthSlider.value}min.wav`;
+ document.body.appendChild(a);
+ a.click();
+ window.URL.revokeObjectURL(url);
+ a.remove();
 
-        } catch (error) {
-            console.error('Failed to save audio:', error);
-            alert('An error occurred while saving the audio. Please check the console for details.');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Save Audio';
-        }
-    }, 100);
+ } catch (error) {
+ console.error('Failed to save audio:', error);
+ alert('An error occurred while saving the audio. Please check the console for details.');
+ } finally {
+ btn.disabled = false;
+ btn.textContent = 'Save Audio';
+ }
+ }, 100);
  },
 
  bufferToWav(buffer) {
